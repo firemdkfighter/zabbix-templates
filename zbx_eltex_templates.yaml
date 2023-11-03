@@ -1,0 +1,3349 @@
+zabbix_export:
+  version: '6.2'
+  date: '2023-11-03T03:09:04Z'
+  template_groups:
+    - uuid: cc766ece4ffb44af91cb844ee2079c26
+      name: Templates
+  templates:
+    - uuid: f01b94229c794719bda033e225b64600
+      template: 'Template Eltex MES2124P SNMPv2'
+      name: 'Template Eltex MES2124P SNMPv2'
+      groups:
+        - name: Templates
+      items:
+        - uuid: 0baccc58fbf5423f9382f010bbabbac0
+          name: 'CPU Utilization 5min'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.89.1.9.0
+          key: eltex.mes2124p.snmp.CpuUtilDuringLast5Minutes
+          delay: 5m
+          history: 60d
+          trends: 60d
+          units: '%'
+          tags:
+            - tag: Application
+              value: General
+          triggers:
+            - uuid: 667db25e118145ed91b8173ca20c567f
+              expression: 'last(/Template Eltex MES2124P SNMPv2/eltex.mes2124p.snmp.CpuUtilDuringLast5Minutes)>70'
+              name: 'CPU Utilization on {HOST.IP1} for 5min > 70%'
+              priority: AVERAGE
+              manual_close: 'YES'
+            - uuid: 9f1a0d8998ed4daf9fa869705f74ec1d
+              expression: 'last(/Template Eltex MES2124P SNMPv2/eltex.mes2124p.snmp.CpuUtilDuringLast5Minutes)>90'
+              name: 'CPU Utilization on {HOST.IP1} for 5min > 90%'
+              priority: HIGH
+              type: MULTIPLE
+              manual_close: 'YES'
+        - uuid: 07997eea42344b5abfa2ada07162dc51
+          name: 'Number of network interfaces'
+          type: SNMP_AGENT
+          snmp_oid: 'IF-MIB::ifNumber.0'
+          key: eltex.mes2124p.snmp.ifNumber
+          delay: 1h
+          history: 1w
+          trends: 60d
+          description: 'The number of network interfaces (regardless of their current state) present on this system.'
+          tags:
+            - tag: Application
+              value: General
+        - uuid: 45711b1d86904186a58a944c21550023
+          name: 'Memory Utilization Free'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.35265.41.1.2.1.1.6.0
+          key: eltex.mes2124p.snmp.ProcessMemoryFreePercent
+          delay: 5m
+          history: 60d
+          trends: 60d
+          status: DISABLED
+          units: '%'
+          description: 'Не умеет этого 2124, 2324 - умеет, этот - нет!'
+          tags:
+            - tag: Application
+              value: General
+        - uuid: e32bf925acd24c9c8a7a4fe2ef535bff
+          name: 'CPU Utilization 1min'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.89.1.8.0
+          key: eltex.mes2124p.snmp.rlCpuUtilDuringLastMinute
+          delay: 3m
+          history: 60d
+          trends: 90d
+          status: DISABLED
+          units: '%'
+          tags:
+            - tag: Application
+              value: General
+        - uuid: 269bc37d9bc746f3a5f39c3d9139d4a7
+          name: 'CPU Utilization 1sec'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.89.1.7.0
+          key: eltex.mes2124p.snmp.rlCpuUtilDuringLastSecond
+          delay: 3m
+          history: 60d
+          trends: 90d
+          status: DISABLED
+          units: '%'
+          tags:
+            - tag: Application
+              value: General
+        - uuid: 6add549da4b2411b9d1fefe269730f9e
+          name: 'Фактическое количество юнитов в стеке'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.89.53.8.0
+          key: eltex.mes2124p.snmp.sunitcount
+          tags:
+            - tag: Application
+              value: General
+          triggers:
+            - uuid: ab49ea8cb4644a83a42d565218977b2d
+              expression: 'last(/Template Eltex MES2124P SNMPv2/eltex.mes2124p.snmp.sunitcount)<>{$UNIT_COUNT}'
+              name: 'Фактическое количество юнитов стека ({HOST.IP1}) не соответствует проектному ({$UNIT_COUNT})'
+              priority: INFO
+              description: 'Считанное из коммутатора кол-во юнитов не соответствует проектному(фактически установленному) количеству. Вероятна неисправность стека.'
+              manual_close: 'YES'
+        - uuid: fa449601df104ed48f4ae4f2ce375af3
+          name: 'Device name'
+          type: SNMP_AGENT
+          snmp_oid: 'SNMPv2-MIB::sysName.0'
+          key: eltex.mes2124p.snmp.sysName
+          delay: 1h
+          history: 1w
+          trends: '0'
+          value_type: CHAR
+          description: "An administratively-assigned name for this managed node. By convention, this is the node's fully-qualified domain name.  If the name is unknown, the value is the zero-length string."
+          inventory_link: NAME
+          tags:
+            - tag: Application
+              value: General
+        - uuid: 08bf68798e0c483a80076bfcc18443d4
+          name: 'Device uptime'
+          type: SNMP_AGENT
+          snmp_oid: 'SNMPv2-MIB::sysUpTime.0'
+          key: eltex.mes2124p.snmp.sysUpTime
+          delay: 5m
+          history: 1w
+          trends: 60d
+          units: uptime
+          description: 'The time since the network management portion of the system was last re-initialized.'
+          preprocessing:
+            - type: MULTIPLIER
+              parameters:
+                - '0.01'
+          tags:
+            - tag: Application
+              value: General
+        - uuid: 062d212887a64c84a390684b47d9c0ec
+          name: 'ICMP ping'
+          type: SIMPLE
+          key: icmpping
+          history: 1w
+          trends: 60d
+          valuemap:
+            name: 'Service state'
+          tags:
+            - tag: Application
+              value: ICMP
+          triggers:
+            - uuid: 782d6f7f097146f28518d399f67d5e6d
+              expression: 'max(/Template Eltex MES2124P SNMPv2/icmpping,#3)=0'
+              name: '{HOST.IP1} недоступен по результатам ICMP-пинга'
+              priority: HIGH
+              manual_close: 'YES'
+        - uuid: 84fe3e7c5f2d4a21a7e3c4191f9a8901
+          name: 'ICMP loss'
+          type: SIMPLE
+          key: icmppingloss
+          delay: 2m
+          history: 1w
+          trends: 60d
+          value_type: FLOAT
+          units: '%'
+          tags:
+            - tag: Application
+              value: ICMP
+          triggers:
+            - uuid: a8c48a7bec49448e8fbf03fbf5a99653
+              expression: 'min(/Template Eltex MES2124P SNMPv2/icmppingloss,5m)>20'
+              name: 'ICMP-ping to {HOST.IP1} loss is too high'
+              priority: WARNING
+              dependencies:
+                - name: '{HOST.IP1} недоступен по результатам ICMP-пинга'
+                  expression: 'max(/Template Eltex MES2124P SNMPv2/icmpping,#3)=0'
+        - uuid: 454874ad0af64ef496a3d84230f3824b
+          name: 'ICMP response time'
+          type: SIMPLE
+          key: icmppingsec
+          delay: 2m
+          history: 1w
+          trends: 60d
+          value_type: FLOAT
+          units: s
+          tags:
+            - tag: Application
+              value: ICMP
+          triggers:
+            - uuid: 943894fb5ca640b096019e4186aaf99a
+              expression: 'avg(/Template Eltex MES2124P SNMPv2/icmppingsec,5m)>0.15'
+              name: 'ICMP-ping response time from {HOST.IP1} is too high'
+              priority: WARNING
+              manual_close: 'YES'
+              dependencies:
+                - name: '{HOST.IP1} недоступен по результатам ICMP-пинга'
+                  expression: 'max(/Template Eltex MES2124P SNMPv2/icmpping,#3)=0'
+      discovery_rules:
+        - uuid: 81dd10b6a4ab4c26988c66d2394758b5
+          name: 'Network interfaces (gi-fa-te type shared)'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},IF-MIB::ifName,{#IFALIAS},IF-MIB::ifAlias]'
+          key: eltex.mes2124p.snmp.discovery.ifGiFaTeNameShared
+          delay: 1h
+          filter:
+            conditions:
+              - macro: '{#SNMPVALUE}'
+                value: '^(gi|fa|te)[0-9]\/0\/([1-9]{1}|[1-4]{1}[0-9]{1})$'
+                formulaid: A
+          description: |
+            You may also consider using IF-MIB::ifType or IF-MIB::ifAlias for discovery depending on your filtering needs.
+
+            {$SNMP_COMMUNITY} is a global macro.
+          item_prototypes:
+            - uuid: 7a919a80414d4127875b74ab25dceede
+              name: 'Admin status of interface {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: 'IF-MIB::ifAdminStatus.{#SNMPINDEX}'
+              key: 'ifAdminStatus[{#SNMPVALUE}]'
+              delay: 10m
+              history: 1w
+              trends: 60d
+              description: 'The desired state of the interface.'
+              valuemap:
+                name: 'SNMP interface status (ifAdminStatus)'
+              tags:
+                - tag: Application
+                  value: 'GI-FA-TE shared interfaces data'
+            - uuid: d2525b004988429b9c20681b30f095a1
+              name: 'Alias of interface {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: 'IF-MIB::ifAlias.{#SNMPINDEX}'
+              key: 'ifAlias[{#SNMPVALUE}]'
+              delay: 1h
+              history: 1w
+              trends: '0'
+              value_type: CHAR
+              tags:
+                - tag: Application
+                  value: 'GI-FA-TE shared interfaces data'
+            - uuid: 673a2768d9d84a619734b769483caf6b
+              name: 'Description of interface {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: 'IF-MIB::ifDescr.{#SNMPINDEX}'
+              key: 'ifDescr[{#SNMPVALUE}]'
+              delay: 1h
+              history: 1w
+              trends: '0'
+              status: DISABLED
+              value_type: CHAR
+              description: 'A textual string containing information about the interface.  This string should include the name of the manufacturer, the product name and the version of the interface hardware/software.'
+              tags:
+                - tag: Application
+                  value: 'GI-FA-TE shared interfaces data'
+            - uuid: cc236431ec8c4c8f95cb788946fc278b
+              name: 'Outbound errors on interface {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: 'IF-MIB::ifOutErrors.{#SNMPINDEX}'
+              key: 'ifGiFaOutErrors[{#SNMPVALUE}]'
+              delay: 10m
+              history: 1w
+              trends: 60d
+              description: 'For packet-oriented interfaces, the number of outbound packets that could not be transmitted because of errors. For character-oriented or fixed-length interfaces, the number of outbound transmission units that could not be transmitted because of errors.'
+              preprocessing:
+                - type: SIMPLE_CHANGE
+                  parameters:
+                    - ''
+              tags:
+                - tag: Application
+                  value: 'GI-FA-TE shared interfaces data'
+              trigger_prototypes:
+                - uuid: e7d6c128bf4d43e58c9c9ee059f34011
+                  expression: 'last(/Template Eltex MES2124P SNMPv2/ifGiFaOutErrors[{#SNMPVALUE}])>0'
+                  name: 'Error OUT interface {#SNMPVALUE} ({#IFALIAS})'
+                  priority: WARNING
+                  manual_close: 'YES'
+            - uuid: cb5288d5b7924df8ac3a842e91a8c953
+              name: 'Incoming Broadcast packets on interface {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: 'IF-MIB::ifHCInBroadcastPkts.{#SNMPINDEX}'
+              key: 'ifHCInBroadcastPkts[{#SNMPVALUE}]'
+              delay: 10m
+              history: 1w
+              trends: 60d
+              units: pps
+              description: 'The number of octets in valid MAC frames received on this interface, including the MAC header and FCS.'
+              preprocessing:
+                - type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+              tags:
+                - tag: Application
+                  value: 'GI-FA-TE shared interfaces data'
+            - uuid: d8968b4c9874452db272f98da5c232cd
+              name: 'Incoming Multicast packets on interface {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: 'IF-MIB::ifHCInMulticastPkts.{#SNMPINDEX}'
+              key: 'ifHCInMulticastPkts[{#SNMPVALUE}]'
+              delay: 10m
+              history: 1w
+              trends: 60d
+              units: pps
+              description: 'The number of octets in valid MAC frames received on this interface, including the MAC header and FCS.'
+              preprocessing:
+                - type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+              tags:
+                - tag: Application
+                  value: 'GI-FA-TE shared interfaces data'
+            - uuid: a1fad41c80994583a7cb521383f004c7
+              name: 'Incoming traffic on interface {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: 'IF-MIB::ifHCInOctets.{#SNMPINDEX}'
+              key: 'ifHCInOctets[{#SNMPVALUE}]'
+              delay: 3m
+              history: 1w
+              trends: 60d
+              units: bit/s
+              description: 'The number of octets in valid MAC frames received on this interface, including the MAC header and FCS.'
+              preprocessing:
+                - type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+                - type: MULTIPLIER
+                  parameters:
+                    - '8'
+              tags:
+                - tag: Application
+                  value: 'GI-FA-TE shared interfaces data'
+            - uuid: 83d497f30e3f4a0e85c3f091f3d1f4f1
+              name: 'Incoming Unicast packets on interface {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: 'IF-MIB::ifHCInUcastPkts.{#SNMPINDEX}'
+              key: 'ifHCInUcastPkts[{#SNMPVALUE}]'
+              delay: 10m
+              history: 1w
+              trends: 60d
+              units: pps
+              description: 'The number of octets in valid MAC frames received on this interface, including the MAC header and FCS.'
+              preprocessing:
+                - type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+              tags:
+                - tag: Application
+                  value: 'GI-FA-TE shared interfaces data'
+            - uuid: 126146edecaf450a9548680cac4b2228
+              name: 'Outgoing Broadcast packets on interface {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: 'IF-MIB::ifHCOutBroadcastPkts.{#SNMPINDEX}'
+              key: 'ifHCOutBroadcastPkts[{#SNMPVALUE}]'
+              delay: 10m
+              history: 1w
+              trends: 60d
+              units: pps
+              description: 'The number of octets in valid MAC frames received on this interface, including the MAC header and FCS.'
+              preprocessing:
+                - type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+              tags:
+                - tag: Application
+                  value: 'GI-FA-TE shared interfaces data'
+            - uuid: 377aa3385cee45ae9456e12f2ceebb4d
+              name: 'Outgoing Multicast packets on interface {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: 'IF-MIB::ifHCOutMulticastPkts.{#SNMPINDEX}'
+              key: 'ifHCOutMulticastPkts[{#SNMPVALUE}]'
+              delay: 10m
+              history: 1w
+              trends: 60d
+              units: pps
+              description: 'The number of octets in valid MAC frames received on this interface, including the MAC header and FCS.'
+              preprocessing:
+                - type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+              tags:
+                - tag: Application
+                  value: 'GI-FA-TE shared interfaces data'
+            - uuid: ee9895b887364629a0d939e755e84bdc
+              name: 'Outgoing traffic on interface {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: 'IF-MIB::ifHCOutOctets.{#SNMPINDEX}'
+              key: 'ifHCOutOctets[{#SNMPVALUE}]'
+              delay: 3m
+              history: 1w
+              trends: 60d
+              units: bit/s
+              description: 'The number of octets transmitted in MAC frames on this interface, including the MAC header and FCS.'
+              preprocessing:
+                - type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+                - type: MULTIPLIER
+                  parameters:
+                    - '8'
+              tags:
+                - tag: Application
+                  value: 'GI-FA-TE shared interfaces data'
+            - uuid: 593be9f4d0014a06a0494de031173487
+              name: 'Outgoing Unicast packets on interface {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: 'IF-MIB::ifHCOutUcastPkts.{#SNMPINDEX}'
+              key: 'ifHCOutUcastPkts[{#SNMPVALUE}]'
+              delay: 10m
+              history: 1w
+              trends: 60d
+              units: pps
+              description: 'The number of octets in valid MAC frames received on this interface, including the MAC header and FCS.'
+              preprocessing:
+                - type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+              tags:
+                - tag: Application
+                  value: 'GI-FA-TE shared interfaces data'
+            - uuid: 0b91899abc5645fd979a164ff72cf4d1
+              name: 'Inbound errors on interface {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: 'IF-MIB::ifInErrors.{#SNMPINDEX}'
+              key: 'ifInErrors[{#SNMPVALUE}]'
+              delay: 10m
+              history: 1w
+              trends: 60d
+              description: 'For packet-oriented interfaces, the number of inbound packets that contained errors preventing them from being deliverable to a higher-layer protocol.  For character-oriented or fixed-length interfaces, the number of inbound transmission units that contained errors preventing them from being deliverable to a higher-layer protocol.'
+              preprocessing:
+                - type: SIMPLE_CHANGE
+                  parameters:
+                    - ''
+              tags:
+                - tag: Application
+                  value: 'GI-FA-TE shared interfaces data'
+              trigger_prototypes:
+                - uuid: 9d2ba84cefa54066899cb47502cc98e8
+                  expression: 'last(/Template Eltex MES2124P SNMPv2/ifInErrors[{#SNMPVALUE}])>0'
+                  name: 'Error IN interface {#SNMPVALUE} ({#IFALIAS})'
+                  priority: WARNING
+                  manual_close: 'YES'
+            - uuid: 0ce5d0c4d37b42169b7cf8f7111a7774
+              name: 'Operational status of interface {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: 'IF-MIB::ifOperStatus.{#SNMPINDEX}'
+              key: 'ifOperStatus[{#SNMPVALUE}]'
+              delay: 15m
+              history: 1w
+              trends: 60d
+              description: 'The current operational state of the interface.'
+              valuemap:
+                name: 'SNMP interface status (ifOperStatus)'
+              tags:
+                - tag: Application
+                  value: 'GI-FA-TE shared interfaces data'
+              trigger_prototypes:
+                - uuid: 3a8b449e7d9b4c9c9048ed94585efbe9
+                  expression: '(last(/Template Eltex MES2124P SNMPv2/ifOperStatus[{#SNMPVALUE}],#1)<>last(/Template Eltex MES2124P SNMPv2/ifOperStatus[{#SNMPVALUE}],#2))=1'
+                  name: 'Operational status was changed on {HOST.NAME} interface {#SNMPVALUE}'
+                  status: DISABLED
+                  priority: INFO
+                  manual_close: 'YES'
+            - uuid: 2a711712848e4a8880845eb72f9605d2
+              name: 'Link speed on interface {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.2.1.2.2.1.5.{#SNMPINDEX}'
+              key: 'link_speed_on_[{#SNMPVALUE}]'
+              delay: 1h
+              history: 1w
+              trends: 60d
+              units: bit/s
+              description: 'Mode speed on interfece.'
+              valuemap:
+                name: Speed
+              tags:
+                - tag: Application
+                  value: 'GI-FA-TE shared interfaces data'
+          trigger_prototypes:
+            - uuid: 2ab3a888b537432da1983da876fbda73
+              expression: '((avg(/Template Eltex MES2124P SNMPv2/ifHCInOctets[{#SNMPVALUE}],5m)>(last(/Template Eltex MES2124P SNMPv2/link_speed_on_[{#SNMPVALUE}])*0.8)) or (avg(/Template Eltex MES2124P SNMPv2/ifHCOutOctets[{#SNMPVALUE}],5m)>(last(/Template Eltex MES2124P SNMPv2/link_speed_on_[{#SNMPVALUE}])*0.8))) and (last(/Template Eltex MES2124P SNMPv2/link_speed_on_[{#SNMPVALUE}])<>0)'
+              name: 'Utilization > 80% on interface {#SNMPVALUE} ({#IFALIAS})'
+              priority: WARNING
+              description: 'Средний трафик(входящий или исходящий) интерфейса за 5 минут превысил 80% его текущей скорости линка'
+              manual_close: 'YES'
+          graph_prototypes:
+            - uuid: 7357e68f862a4235945ab9af73e114eb
+              name: 'B,M,U-cast on gi-fa int {#SNMPVALUE} ({#IFALIAS})'
+              ymin_type_1: FIXED
+              graph_items:
+                - drawtype: BOLD_LINE
+                  color: 0000C8
+                  yaxisside: RIGHT
+                  item:
+                    host: 'Template Eltex MES2124P SNMPv2'
+                    key: 'ifHCInBroadcastPkts[{#SNMPVALUE}]'
+                - sortorder: '1'
+                  color: C800C8
+                  yaxisside: RIGHT
+                  item:
+                    host: 'Template Eltex MES2124P SNMPv2'
+                    key: 'ifHCInMulticastPkts[{#SNMPVALUE}]'
+                - sortorder: '2'
+                  color: 00C8C8
+                  yaxisside: RIGHT
+                  item:
+                    host: 'Template Eltex MES2124P SNMPv2'
+                    key: 'ifHCInUcastPkts[{#SNMPVALUE}]'
+                - sortorder: '3'
+                  drawtype: BOLD_LINE
+                  color: C8C800
+                  yaxisside: RIGHT
+                  item:
+                    host: 'Template Eltex MES2124P SNMPv2'
+                    key: 'ifHCOutBroadcastPkts[{#SNMPVALUE}]'
+                - sortorder: '4'
+                  color: FC6EA3
+                  yaxisside: RIGHT
+                  item:
+                    host: 'Template Eltex MES2124P SNMPv2'
+                    key: 'ifHCOutMulticastPkts[{#SNMPVALUE}]'
+                - sortorder: '5'
+                  color: '960000'
+                  yaxisside: RIGHT
+                  item:
+                    host: 'Template Eltex MES2124P SNMPv2'
+                    key: 'ifHCOutUcastPkts[{#SNMPVALUE}]'
+            - uuid: 4037c8211a2c465abb595deca6097f2c
+              name: 'Traffic on gi-fa int {#SNMPVALUE} ({#IFALIAS})'
+              ymin_type_1: FIXED
+              graph_items:
+                - drawtype: GRADIENT_LINE
+                  color: 1A7C11
+                  yaxisside: RIGHT
+                  item:
+                    host: 'Template Eltex MES2124P SNMPv2'
+                    key: 'ifHCInOctets[{#SNMPVALUE}]'
+                - sortorder: '1'
+                  drawtype: GRADIENT_LINE
+                  color: 0000CC
+                  yaxisside: RIGHT
+                  item:
+                    host: 'Template Eltex MES2124P SNMPv2'
+                    key: 'ifHCOutOctets[{#SNMPVALUE}]'
+                - sortorder: '2'
+                  color: F63100
+                  item:
+                    host: 'Template Eltex MES2124P SNMPv2'
+                    key: 'ifInErrors[{#SNMPVALUE}]'
+                - sortorder: '3'
+                  color: EE00EE
+                  item:
+                    host: 'Template Eltex MES2124P SNMPv2'
+                    key: 'ifGiFaOutErrors[{#SNMPVALUE}]'
+        - uuid: b17b408db2414d27adc890fefbc2f73f
+          name: 'Network interfaces (te type specific)'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},IF-MIB::ifName,{#IFALIAS},IF-MIB::ifAlias]'
+          key: eltex.mes2124p.snmp.discovery.ifTeSpecificName
+          delay: 1h
+          filter:
+            conditions:
+              - macro: '{#SNMPVALUE}'
+                value: '^(te)[0-9]\/0\/([1-9]{1}|[1-4]{1}[0-9]{1})$'
+                formulaid: A
+          description: |
+            You may also consider using IF-MIB::ifType or IF-MIB::ifAlias for discovery depending on your filtering needs.
+
+            {$SNMP_COMMUNITY} is a global macro.
+          item_prototypes:
+            - uuid: 87de071e01064753bc04f998163db026
+              name: 'Уровень мощности на приеме SFP-интерфейса {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.89.90.1.2.1.3.{#SNMPINDEX}.9'
+              key: 'rlPhyTestGetResult.InPow[{#SNMPVALUE}]'
+              delay: 10m
+              value_type: FLOAT
+              units: dBm
+              description: 'Input power on SFP interface.'
+              preprocessing:
+                - type: MULTIPLIER
+                  parameters:
+                    - '0.001'
+              tags:
+                - tag: Application
+                  value: 'TE specific interfaces data'
+            - uuid: 33a258de55b349a0a693f27928db9c6b
+              name: 'Ток смещения SFP-интерфейса {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.89.90.1.2.1.3.{#SNMPINDEX}.7'
+              key: 'rlPhyTestGetResult.mA[{#SNMPVALUE}]'
+              delay: 10m
+              value_type: FLOAT
+              units: A
+              description: 'Ток смещения'
+              preprocessing:
+                - type: MULTIPLIER
+                  parameters:
+                    - '0.000001'
+              tags:
+                - tag: Application
+                  value: 'TE specific interfaces data'
+            - uuid: 4822cf8087bb4254b2fe6ac3f74427f2
+              name: 'Уровень мощности на передаче SFP-интерфейса {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.89.90.1.2.1.3.{#SNMPINDEX}.8'
+              key: 'rlPhyTestGetResult.OutPow[{#SNMPVALUE}]'
+              delay: 10m
+              value_type: FLOAT
+              units: dBm
+              description: 'Out power on SFP interface.'
+              preprocessing:
+                - type: MULTIPLIER
+                  parameters:
+                    - '0.001'
+              tags:
+                - tag: Application
+                  value: 'TE specific interfaces data'
+            - uuid: 05024aca800c4f439150ba5481dd8b0e
+              name: 'Температура SFP-интерфейса {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.89.90.1.2.1.3.{#SNMPINDEX}.5'
+              key: 'rlPhyTestGetResult.t[{#SNMPVALUE}]'
+              delay: 10m
+              units: °C
+              description: 'Temperature on SFP interface.'
+              tags:
+                - tag: Application
+                  value: 'TE specific interfaces data'
+              trigger_prototypes:
+                - uuid: 80c7cd538d924eff98eb5fa6b6e3472d
+                  expression: 'last(/Template Eltex MES2124P SNMPv2/rlPhyTestGetResult.t[{#SNMPVALUE}])>70'
+                  name: 'Температура SFP-модуля интерфейса {#SNMPVALUE} ({#IFALIAS}), превысила 70°C'
+                  priority: AVERAGE
+                  manual_close: 'YES'
+            - uuid: d9ad1cac43f74173a0950e285b1aedaa
+              name: 'Напряжение питания SFP-интерфейса {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.89.90.1.2.1.3.{#SNMPINDEX}.6'
+              key: 'rlPhyTestGetResult.v[{#SNMPVALUE}]'
+              delay: 10m
+              value_type: FLOAT
+              units: V
+              description: 'Voltage on SFP interface.'
+              preprocessing:
+                - type: MULTIPLIER
+                  parameters:
+                    - '0.000001'
+              tags:
+                - tag: Application
+                  value: 'TE specific interfaces data'
+          graph_prototypes:
+            - uuid: e3e5fa1eebb94d5abc8f238ce92be638
+              name: 'Напряжение питания SFP-модуля интерфейса {#SNMPVALUE} ({#IFALIAS})'
+              ymin_type_1: FIXED
+              graph_items:
+                - drawtype: GRADIENT_LINE
+                  color: 1A7C11
+                  yaxisside: RIGHT
+                  item:
+                    host: 'Template Eltex MES2124P SNMPv2'
+                    key: 'rlPhyTestGetResult.v[{#SNMPVALUE}]'
+            - uuid: e4bcb783b1bc41cc97f3dd05a566cc1d
+              name: 'Температура SFP-модуля интерфеса {#SNMPVALUE} ({#IFALIAS})'
+              ymin_type_1: FIXED
+              graph_items:
+                - drawtype: GRADIENT_LINE
+                  color: 1A7C11
+                  yaxisside: RIGHT
+                  item:
+                    host: 'Template Eltex MES2124P SNMPv2'
+                    key: 'rlPhyTestGetResult.t[{#SNMPVALUE}]'
+        - uuid: 2c7591507cce4b66aa3607b006ae2ae5
+          name: 'Unit number discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#MES2124UNITMAC}, 1.3.6.1.4.1.89.53.4.1.7]'
+          key: eltex.mes2124p.snmp.discovery.mac
+          delay: 1h
+          description: 'Возвращает номера юнитов (это просто SNMP-индекс: {#SNMPINDEX}) в стеке по которым запрашиваем MAC-адрес'
+          item_prototypes:
+            - uuid: fcdb4fe63f564c63a30916c9a128c572
+              name: 'Описание модели юнита №{#SNMPINDEX} ({#MES2124UNITMAC})'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.89.53.4.1.6.{#SNMPINDEX}'
+              key: 'eltex.mes2124p.snmp.unit.desc[{#SNMPINDEX}]'
+              delay: 30m
+              trends: '0'
+              value_type: TEXT
+              description: 'Описание модели юнита (OID: 1.3.6.1.4.1.89.53.4.1.6)'
+              tags:
+                - tag: Application
+                  value: General
+            - uuid: 2c6edfdf1a324bdfbb39567cda934680
+              name: 'Статус 1-го вентилятора юнита №{#SNMPINDEX} ({#MES2124UNITMAC})'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.89.53.15.1.4.{#SNMPINDEX}'
+              key: 'eltex.mes2124p.snmp.unit.fan1status[{#SNMPINDEX}]'
+              delay: 3m
+              description: 'Статус первого вентилятора (FAN1 OID: 1.3.6.1.4.1.89.53.15.1.4)'
+              valuemap:
+                name: EltexFANStatus
+              tags:
+                - tag: Application
+                  value: General
+              trigger_prototypes:
+                - uuid: 5c06fe77bd88406bac73d0f5cdd7a780
+                  expression: 'last(/Template Eltex MES2124P SNMPv2/eltex.mes2124p.snmp.unit.fan1status[{#SNMPINDEX}])<>1'
+                  name: 'Первый вентилятор юнита №{#SNMPINDEX} ({#MES2124UNITMAC}) не функционален'
+                  priority: AVERAGE
+                  manual_close: 'YES'
+            - uuid: 2ed6ccf008d34cc2b7112cf7956ee01b
+              name: 'Статус 2-го вентилятора юнита №{#SNMPINDEX} ({#MES2124UNITMAC})'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.89.53.15.1.5.{#SNMPINDEX}'
+              key: 'eltex.mes2124p.snmp.unit.fan2status[{#SNMPINDEX}]'
+              delay: 3m
+              description: 'Статус второго вентилятора (FAN2 OID: 1.3.6.1.4.1.89.53.15.1.5)'
+              valuemap:
+                name: EltexFANStatus
+              tags:
+                - tag: Application
+                  value: General
+              trigger_prototypes:
+                - uuid: 6a96a25d17464f56a774e294466a99f5
+                  expression: 'last(/Template Eltex MES2124P SNMPv2/eltex.mes2124p.snmp.unit.fan2status[{#SNMPINDEX}])<>1'
+                  name: 'Второй вентилятор юнита №{#SNMPINDEX} ({#MES2124UNITMAC}) не функционален'
+                  priority: AVERAGE
+                  manual_close: 'YES'
+            - uuid: 08b2a0bb658049f4bb90d7a4a4c783d0
+              name: 'Версия FW юнита №{#SNMPINDEX} ({#MES2124UNITMAC})'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.89.53.4.1.5.{#SNMPINDEX}'
+              key: 'eltex.mes2124p.snmp.unit.fw[{#SNMPINDEX}]'
+              delay: 30m
+              trends: '0'
+              value_type: TEXT
+              description: 'Версия firmware юнита (OID: 1.3.6.1.4.1.89.53.4.1.5)'
+              tags:
+                - tag: Application
+                  value: General
+            - uuid: add485c24caa48a98388d8010185be87
+              name: 'MAC-адрес юнита №{#SNMPINDEX} ({#MES2124UNITMAC})'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.89.53.4.1.7.{#SNMPINDEX}'
+              key: 'eltex.mes2124p.snmp.unit.mac[{#SNMPINDEX}]'
+              delay: 30m
+              trends: '0'
+              value_type: TEXT
+              description: 'MAC-адрес юнита (OID: 1.3.6.1.4.1.89.53.4.1.7)'
+              tags:
+                - tag: Application
+                  value: General
+            - uuid: 7277c449ee964cb78ec6824d08c20f38
+              name: 'Серийный номер юнита №{#SNMPINDEX} ({#MES2124UNITMAC})'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.89.53.14.1.5.{#SNMPINDEX}'
+              key: 'eltex.mes2124p.snmp.unit.sn[{#SNMPINDEX}]'
+              delay: 30m
+              trends: '0'
+              value_type: TEXT
+              description: 'Серийный номер юнита (OID: 1.3.6.1.4.1.89.53.14.1.5)'
+              tags:
+                - tag: Application
+                  value: General
+            - uuid: 9c70bd1c0d5c476ca9a1abc84ab70fb1
+              name: 'Температура юнита №{#SNMPINDEX} ({#MES2124UNITMAC})'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.89.53.15.1.9.{#SNMPINDEX}'
+              key: 'eltex.mes2124p.snmp.unit.temperature[{#SNMPINDEX}]'
+              delay: 3m
+              units: °C
+              description: 'Температура юнита (OID: 1.3.6.1.4.1.89.53.15.1.9)'
+              tags:
+                - tag: Application
+                  value: General
+              trigger_prototypes:
+                - uuid: 4e4d1d3b0a844f55bb88ce16b655d96e
+                  expression: 'last(/Template Eltex MES2124P SNMPv2/eltex.mes2124p.snmp.unit.temperature[{#SNMPINDEX}])>70'
+                  name: 'Температура юнита №{#SNMPINDEX} ({#MES2124UNITMAC})  > 70°C'
+                  priority: AVERAGE
+                  description: 'Последнее значение температуры указанного юнита превысила 70°C (OID: 1.3.6.1.4.1.89.53.15.1.9)'
+                  manual_close: 'YES'
+                - uuid: 19234edf541948628f2e3b1c4a22bad0
+                  expression: 'last(/Template Eltex MES2124P SNMPv2/eltex.mes2124p.snmp.unit.temperature[{#SNMPINDEX}])>80'
+                  name: 'Температура юнита №{#SNMPINDEX} ({#MES2124UNITMAC})  > 80°C'
+                  priority: HIGH
+                  description: 'Последнее значение температуры указанного юнита превысила 80°C (OID: 1.3.6.1.4.1.89.53.15.1.9)'
+                  manual_close: 'YES'
+          graph_prototypes:
+            - uuid: 185fff586b5f4b1b80e62db00ae9820a
+              name: 'Температура юнита №{#SNMPINDEX} ({#MES2124UNITMAC})'
+              ymin_type_1: FIXED
+              graph_items:
+                - drawtype: GRADIENT_LINE
+                  color: 1A7C11
+                  yaxisside: RIGHT
+                  item:
+                    host: 'Template Eltex MES2124P SNMPv2'
+                    key: 'eltex.mes2124p.snmp.unit.temperature[{#SNMPINDEX}]'
+          preprocessing:
+            - type: JAVASCRIPT
+              parameters:
+                - |
+                  value=value.split(" \"").join("\"");
+                  return value.split(' ').join(':');
+      macros:
+        - macro: '{$SNMP_COMMUNITY}'
+          value: public
+      valuemaps:
+        - uuid: 42bb4b78e9ca412da7ed3940f5ac1417
+          name: EltexFANStatus
+          mappings:
+            - value: '1'
+              newvalue: normal
+            - value: '5'
+              newvalue: notFunctioning
+        - uuid: 6d8c0c6948d243dbbaa7434a4ae8c891
+          name: 'Service state'
+          mappings:
+            - value: '0'
+              newvalue: Down
+            - value: '1'
+              newvalue: Up
+        - uuid: ea5b30f5ed5f46e188166addbe80d4d4
+          name: 'SNMP interface status (ifAdminStatus)'
+          mappings:
+            - value: '1'
+              newvalue: up
+            - value: '2'
+              newvalue: down
+            - value: '3'
+              newvalue: testing
+        - uuid: a12a121b75ec4c0f90c5d05f98fe609c
+          name: 'SNMP interface status (ifOperStatus)'
+          mappings:
+            - value: '1'
+              newvalue: up
+            - value: '2'
+              newvalue: down
+            - value: '3'
+              newvalue: testing
+            - value: '4'
+              newvalue: unknown
+            - value: '5'
+              newvalue: dormant
+            - value: '6'
+              newvalue: notPresent
+            - value: '7'
+              newvalue: lowerLayerDown
+        - uuid: 87574e5666094e1995585dd06dca6d51
+          name: Speed
+          mappings:
+            - value: '10'
+              newvalue: '10  Mb/s'
+            - value: '100'
+              newvalue: '100 Mb/s'
+            - value: '1000'
+              newvalue: '1 Gb/s'
+            - value: '10000'
+              newvalue: '10 Gb/s'
+    - uuid: 97740950290d4277844ed8e7389c866f
+      template: 'Template Eltex MES2124P SNMPv2 -NON PORTS-'
+      name: 'Template Eltex MES2124P SNMPv2 -NON PORTS-'
+      description: 'Шаблон создан в основном для мониторинга общего состояния стеков в филиалах (магазинах), мониторит только основные параметры. Состояние портов не мониторит для экономии трафика.'
+      groups:
+        - name: Templates
+      items:
+        - uuid: 3322e33ae69145029471ed5aa51967b6
+          name: 'CPU Utilization 5min'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.89.1.9.0
+          key: eltex.mes2124p.snmp.CpuUtilDuringLast5Minutes
+          delay: 5m
+          history: 60d
+          trends: 60d
+          units: '%'
+          tags:
+            - tag: Application
+              value: General
+          triggers:
+            - uuid: 1592ea9eeb044b1dad5031a825894c06
+              expression: 'last(/Template Eltex MES2124P SNMPv2 -NON PORTS-/eltex.mes2124p.snmp.CpuUtilDuringLast5Minutes)>70'
+              name: 'CPU Utilization on {HOST.IP1} for 5min > 70%'
+              priority: AVERAGE
+              manual_close: 'YES'
+            - uuid: 0d10314294584d05aa5ff13c45b9cddd
+              expression: 'last(/Template Eltex MES2124P SNMPv2 -NON PORTS-/eltex.mes2124p.snmp.CpuUtilDuringLast5Minutes)>90'
+              name: 'CPU Utilization on {HOST.IP1} for 5min > 90%'
+              priority: HIGH
+              type: MULTIPLE
+              manual_close: 'YES'
+        - uuid: 6a6154ad81b3460882097342c9809c72
+          name: 'Number of network interfaces'
+          type: SNMP_AGENT
+          snmp_oid: 'IF-MIB::ifNumber.0'
+          key: eltex.mes2124p.snmp.ifNumber
+          delay: 1h
+          history: 1w
+          trends: 60d
+          description: 'The number of network interfaces (regardless of their current state) present on this system.'
+          tags:
+            - tag: Application
+              value: General
+        - uuid: 83335759b1cb4611aafe789426bfaa11
+          name: 'Memory Utilization Free'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.35265.41.1.2.1.1.6.0
+          key: eltex.mes2124p.snmp.ProcessMemoryFreePercent
+          delay: 5m
+          history: 60d
+          trends: 60d
+          status: DISABLED
+          units: '%'
+          description: 'Не умеет этого 2124, 2324 - умеет, этот - нет!'
+          tags:
+            - tag: Application
+              value: General
+        - uuid: b9469f949bec47bb9f3f53c804bf309e
+          name: 'CPU Utilization 1min'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.89.1.8.0
+          key: eltex.mes2124p.snmp.rlCpuUtilDuringLastMinute
+          delay: 3m
+          history: 60d
+          trends: 90d
+          status: DISABLED
+          units: '%'
+          tags:
+            - tag: Application
+              value: General
+        - uuid: 8174cf703de4473e9b0495a8ca057908
+          name: 'CPU Utilization 1sec'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.89.1.7.0
+          key: eltex.mes2124p.snmp.rlCpuUtilDuringLastSecond
+          delay: 3m
+          history: 60d
+          trends: 90d
+          status: DISABLED
+          units: '%'
+          tags:
+            - tag: Application
+              value: General
+        - uuid: eafcd95c4731469091bbcf7620bec10a
+          name: 'Фактическое количество юнитов в стеке'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.89.53.8.0
+          key: eltex.mes2124p.snmp.sunitcount
+          tags:
+            - tag: Application
+              value: General
+          triggers:
+            - uuid: ce37bca043d84467a461012796f0a1eb
+              expression: 'last(/Template Eltex MES2124P SNMPv2 -NON PORTS-/eltex.mes2124p.snmp.sunitcount)<>{$UNIT_COUNT}'
+              name: 'Фактическое количество юнитов стека ({HOST.IP1}) не соответствует проектному - {$UNIT_COUNT}'
+              opdata: 'Текущее кол-во:  {ITEM.LASTVALUE1}'
+              priority: HIGH
+              description: 'Считанное из коммутатора кол-во юнитов не соответствует проектному(фактически установленному) количеству. Вероятна неисправность стека.'
+              manual_close: 'YES'
+        - uuid: 99fa73ca10094cd48a84fbebe3347052
+          name: 'Device name'
+          type: SNMP_AGENT
+          snmp_oid: 'SNMPv2-MIB::sysName.0'
+          key: eltex.mes2124p.snmp.sysName
+          delay: 1h
+          history: 1w
+          trends: '0'
+          value_type: CHAR
+          description: "An administratively-assigned name for this managed node. By convention, this is the node's fully-qualified domain name.  If the name is unknown, the value is the zero-length string."
+          inventory_link: NAME
+          tags:
+            - tag: Application
+              value: General
+        - uuid: 296fdc5b81404dafa8d9adbc77ce46a3
+          name: 'Device uptime'
+          type: SNMP_AGENT
+          snmp_oid: 'SNMPv2-MIB::sysUpTime.0'
+          key: eltex.mes2124p.snmp.sysUpTime
+          delay: 5m
+          history: 1w
+          trends: 60d
+          units: uptime
+          description: 'The time since the network management portion of the system was last re-initialized.'
+          preprocessing:
+            - type: MULTIPLIER
+              parameters:
+                - '0.01'
+          tags:
+            - tag: Application
+              value: General
+        - uuid: da913a8570934c67ab4094af670c4d77
+          name: 'ICMP ping'
+          type: SIMPLE
+          key: icmpping
+          history: 1w
+          trends: 60d
+          valuemap:
+            name: 'Service state'
+          tags:
+            - tag: Application
+              value: ICMP
+          triggers:
+            - uuid: 49354a0ea3444a8bb8d3cf93ff403114
+              expression: 'max(/Template Eltex MES2124P SNMPv2 -NON PORTS-/icmpping,#3)=0'
+              name: '{HOST.IP1} недоступен по результатам ICMP-пинга'
+              priority: HIGH
+              manual_close: 'YES'
+        - uuid: 75c70fcd6f754a05b4b16d35acb33461
+          name: 'ICMP loss'
+          type: SIMPLE
+          key: icmppingloss
+          delay: 2m
+          history: 1w
+          trends: 60d
+          value_type: FLOAT
+          units: '%'
+          tags:
+            - tag: Application
+              value: ICMP
+          triggers:
+            - uuid: 1c69f40e03ef49c083c0072c27dba8b0
+              expression: 'min(/Template Eltex MES2124P SNMPv2 -NON PORTS-/icmppingloss,5m)>20'
+              name: 'ICMP-ping to {HOST.IP1} loss is too high'
+              priority: WARNING
+              dependencies:
+                - name: '{HOST.IP1} недоступен по результатам ICMP-пинга'
+                  expression: 'max(/Template Eltex MES2124P SNMPv2 -NON PORTS-/icmpping,#3)=0'
+        - uuid: d54f2316e72b42fd8f88c17d902fd1de
+          name: 'ICMP response time'
+          type: SIMPLE
+          key: icmppingsec
+          delay: 2m
+          history: 1w
+          trends: 60d
+          value_type: FLOAT
+          units: s
+          tags:
+            - tag: Application
+              value: ICMP
+          triggers:
+            - uuid: 495c5e350bc44bdeb13fbd091d32869c
+              expression: 'avg(/Template Eltex MES2124P SNMPv2 -NON PORTS-/icmppingsec,5m)>0.15'
+              name: 'ICMP-ping response time from {HOST.IP1} is too high'
+              priority: WARNING
+              manual_close: 'YES'
+              dependencies:
+                - name: '{HOST.IP1} недоступен по результатам ICMP-пинга'
+                  expression: 'max(/Template Eltex MES2124P SNMPv2 -NON PORTS-/icmpping,#3)=0'
+      discovery_rules:
+        - uuid: b6f11be0b6d84f48b12ac6534acd5486
+          name: 'Unit number discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#MES2124UNITMAC}, 1.3.6.1.4.1.89.53.4.1.7]'
+          key: eltex.mes2124p.snmp.discovery.mac
+          delay: 1h
+          description: 'Возвращает номера юнитов (это просто SNMP-индекс: {#SNMPINDEX}) в стеке по которым запрашиваем MAC-адрес'
+          item_prototypes:
+            - uuid: b5cbbee428694e5788a2ae21b95e9915
+              name: 'Описание модели юнита №{#SNMPINDEX} ({#MES2124UNITMAC})'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.89.53.4.1.6.{#SNMPINDEX}'
+              key: 'eltex.mes2124p.snmp.unit.desc[{#SNMPINDEX}]'
+              delay: 30m
+              trends: '0'
+              value_type: TEXT
+              description: 'Описание модели юнита (OID: 1.3.6.1.4.1.89.53.4.1.6)'
+              tags:
+                - tag: Application
+                  value: General
+            - uuid: b3225ed069a74e40b29fbf761f514744
+              name: 'Статус 1-го вентилятора юнита №{#SNMPINDEX} ({#MES2124UNITMAC})'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.89.53.15.1.4.{#SNMPINDEX}'
+              key: 'eltex.mes2124p.snmp.unit.fan1status[{#SNMPINDEX}]'
+              delay: 3m
+              description: 'Статус первого вентилятора (FAN1 OID: 1.3.6.1.4.1.89.53.15.1.4)'
+              valuemap:
+                name: EltexFANStatus
+              tags:
+                - tag: Application
+                  value: General
+              trigger_prototypes:
+                - uuid: 44da99951c6c4648b8b9e58517b6e1bf
+                  expression: 'last(/Template Eltex MES2124P SNMPv2 -NON PORTS-/eltex.mes2124p.snmp.unit.fan1status[{#SNMPINDEX}])<>1'
+                  name: 'Первый вентилятор юнита №{#SNMPINDEX} ({#MES2124UNITMAC}) не функционален'
+                  priority: AVERAGE
+            - uuid: e8258cdfc46748d08de274f5d55941fc
+              name: 'Статус 2-го вентилятора юнита №{#SNMPINDEX} ({#MES2124UNITMAC})'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.89.53.15.1.5.{#SNMPINDEX}'
+              key: 'eltex.mes2124p.snmp.unit.fan2status[{#SNMPINDEX}]'
+              delay: 3m
+              description: 'Статус второго вентилятора (FAN2 OID: 1.3.6.1.4.1.89.53.15.1.5)'
+              valuemap:
+                name: EltexFANStatus
+              tags:
+                - tag: Application
+                  value: General
+              trigger_prototypes:
+                - uuid: 0ee5f5312265449791ef5c21610021e0
+                  expression: 'last(/Template Eltex MES2124P SNMPv2 -NON PORTS-/eltex.mes2124p.snmp.unit.fan2status[{#SNMPINDEX}])<>1'
+                  name: 'Второй вентилятор юнита №{#SNMPINDEX} ({#MES2124UNITMAC}) не функционален'
+                  priority: AVERAGE
+            - uuid: 00abaa381d7a48398c66fc52c08fcbf7
+              name: 'Версия FW юнита №{#SNMPINDEX} ({#MES2124UNITMAC})'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.89.53.4.1.5.{#SNMPINDEX}'
+              key: 'eltex.mes2124p.snmp.unit.fw[{#SNMPINDEX}]'
+              delay: 30m
+              trends: '0'
+              value_type: TEXT
+              description: 'Версия firmware юнита (OID: 1.3.6.1.4.1.89.53.4.1.5)'
+              tags:
+                - tag: Application
+                  value: General
+            - uuid: d9110594ca4e48898a8696edad28a080
+              name: 'MAC-адрес юнита №{#SNMPINDEX} ({#MES2124UNITMAC})'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.89.53.4.1.7.{#SNMPINDEX}'
+              key: 'eltex.mes2124p.snmp.unit.mac[{#SNMPINDEX}]'
+              delay: 30m
+              trends: '0'
+              value_type: TEXT
+              description: 'MAC-адрес юнита (OID: 1.3.6.1.4.1.89.53.4.1.7)'
+              tags:
+                - tag: Application
+                  value: General
+            - uuid: 2c26a46db855440c8da927c01575b3e9
+              name: 'Серийный номер юнита №{#SNMPINDEX} ({#MES2124UNITMAC})'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.89.53.14.1.5.{#SNMPINDEX}'
+              key: 'eltex.mes2124p.snmp.unit.sn[{#SNMPINDEX}]'
+              delay: 30m
+              trends: '0'
+              value_type: TEXT
+              description: 'Серийный номер юнита (OID: 1.3.6.1.4.1.89.53.14.1.5)'
+              tags:
+                - tag: Application
+                  value: General
+            - uuid: 5ec77b0d989b48a48c2c651100f225bf
+              name: 'Температура юнита №{#SNMPINDEX} ({#MES2124UNITMAC})'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.89.53.15.1.9.{#SNMPINDEX}'
+              key: 'eltex.mes2124p.snmp.unit.temperature[{#SNMPINDEX}]'
+              delay: 3m
+              units: °C
+              description: 'Температура юнита (OID: 1.3.6.1.4.1.89.53.15.1.9)'
+              tags:
+                - tag: Application
+                  value: General
+              trigger_prototypes:
+                - uuid: b3489882c0a54e5496b563a7fc987159
+                  expression: 'last(/Template Eltex MES2124P SNMPv2 -NON PORTS-/eltex.mes2124p.snmp.unit.temperature[{#SNMPINDEX}])>60'
+                  name: 'Температура юнита №{#SNMPINDEX} ({#MES2124UNITMAC})  > 60°C'
+                  priority: AVERAGE
+                  description: 'Последнее значение температуры указанного юнита превысила 60°C (OID: 1.3.6.1.4.1.89.53.15.1.9)'
+                - uuid: 36f318ebd3464a86bb01a9c3f1ff0818
+                  expression: 'last(/Template Eltex MES2124P SNMPv2 -NON PORTS-/eltex.mes2124p.snmp.unit.temperature[{#SNMPINDEX}])>80'
+                  name: 'Температура юнита №{#SNMPINDEX} ({#MES2124UNITMAC})  > 80°C'
+                  priority: HIGH
+                  description: 'Последнее значение температуры указанного юнита превысила 80°C (OID: 1.3.6.1.4.1.89.53.15.1.9)'
+          graph_prototypes:
+            - uuid: 65323e4ce66141c2b71ac2ae20246fea
+              name: 'Температура юнита №{#SNMPINDEX} ({#MES2124UNITMAC})'
+              ymin_type_1: FIXED
+              graph_items:
+                - drawtype: GRADIENT_LINE
+                  color: 1A7C11
+                  yaxisside: RIGHT
+                  item:
+                    host: 'Template Eltex MES2124P SNMPv2 -NON PORTS-'
+                    key: 'eltex.mes2124p.snmp.unit.temperature[{#SNMPINDEX}]'
+          preprocessing:
+            - type: JAVASCRIPT
+              parameters:
+                - |
+                  value=value.split(" \"").join("\"");
+                  return value.split(' ').join(':');
+      macros:
+        - macro: '{$SNMP_COMMUNITY}'
+          value: public
+      valuemaps:
+        - uuid: 356913ff6aa540a8bb1be3f7453bd6fe
+          name: EltexFANStatus
+          mappings:
+            - value: '1'
+              newvalue: normal
+            - value: '5'
+              newvalue: notFunctioning
+        - uuid: 173449aed94f4cc28fd76fd712aa7362
+          name: 'Service state'
+          mappings:
+            - value: '0'
+              newvalue: Down
+            - value: '1'
+              newvalue: Up
+        - uuid: 14d4baec46cc449dbee091e067247629
+          name: 'SNMP interface status (ifAdminStatus)'
+          mappings:
+            - value: '1'
+              newvalue: up
+            - value: '2'
+              newvalue: down
+            - value: '3'
+              newvalue: testing
+        - uuid: 9409a308507e49cd88f07bc3699f3f6e
+          name: 'SNMP interface status (ifOperStatus)'
+          mappings:
+            - value: '1'
+              newvalue: up
+            - value: '2'
+              newvalue: down
+            - value: '3'
+              newvalue: testing
+            - value: '4'
+              newvalue: unknown
+            - value: '5'
+              newvalue: dormant
+            - value: '6'
+              newvalue: notPresent
+            - value: '7'
+              newvalue: lowerLayerDown
+        - uuid: c6438b2f3f344b729fd1e126a0ddc881
+          name: Speed
+          mappings:
+            - value: '10'
+              newvalue: '10  Mb/s'
+            - value: '100'
+              newvalue: '100 Mb/s'
+            - value: '1000'
+              newvalue: '1 Gb/s'
+            - value: '10000'
+              newvalue: '10 Gb/s'
+    - uuid: 13103c0c619b44f3992c5763325d315f
+      template: 'Template Eltex MES2324FB SNMPv2'
+      name: 'Template Eltex MES2324FB SNMPv2'
+      description: 'Шаблон под FB модификацию'
+      groups:
+        - name: Templates
+      items:
+        - uuid: 3986c7aef9144277834cc5f4ea5f8897
+          name: 'CPU Utilization 5min'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.89.1.9.0
+          key: eltex.mes2324p.snmp.CpuUtilDuringLast5Minutes
+          delay: 5m
+          history: 60d
+          trends: 60d
+          units: '%'
+          tags:
+            - tag: Application
+              value: General
+          triggers:
+            - uuid: 17e39e1c42e348d18d6c8e089c9d1120
+              expression: 'last(/Template Eltex MES2324FB SNMPv2/eltex.mes2324p.snmp.CpuUtilDuringLast5Minutes)>70'
+              name: 'CPU Utilization on {HOST.IP1} for 5min > 70%'
+              priority: AVERAGE
+            - uuid: 52c4b3af55e04d0d86a78b92d775ddf1
+              expression: 'last(/Template Eltex MES2324FB SNMPv2/eltex.mes2324p.snmp.CpuUtilDuringLast5Minutes)>90'
+              name: 'CPU Utilization on {HOST.IP1} for 5min > 90%'
+              priority: HIGH
+        - uuid: 00924a74752e443e8d1a782da9ad7ba4
+          name: 'Number of network interfaces'
+          type: SNMP_AGENT
+          snmp_oid: 'IF-MIB::ifNumber.0'
+          key: eltex.mes2324p.snmp.ifNumber
+          delay: 1h
+          history: 1w
+          trends: 60d
+          description: 'The number of network interfaces (regardless of their current state) present on this system.'
+          tags:
+            - tag: Application
+              value: General
+        - uuid: 061cdbd4b503428788b581b1912921f5
+          name: 'Memory Utilization Free'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.35265.41.1.2.1.1.6.0
+          key: eltex.mes2324p.snmp.ProcessMemoryFreePercent
+          delay: 5m
+          history: 60d
+          trends: 60d
+          units: '%'
+          description: 'Данный OID показывает количество свободной ОЗУ в процентах. Данная возможность появилась начиная с версии 4.0.7. Ранее не было такой возможности.'
+          tags:
+            - tag: Application
+              value: General
+        - uuid: e488aba7b67e4de1b07c18d67102dd6e
+          name: 'CPU Utilization 1min'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.89.1.8.0
+          key: eltex.mes2324p.snmp.rlCpuUtilDuringLastMinute
+          delay: 3m
+          history: 60d
+          trends: 90d
+          status: DISABLED
+          units: '%'
+          tags:
+            - tag: Application
+              value: General
+        - uuid: 2d6a408cd4924de5b5bd6afbeae85ce1
+          name: 'CPU Utilization 1sec'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.89.1.7.0
+          key: eltex.mes2324p.snmp.rlCpuUtilDuringLastSecond
+          delay: 3m
+          history: 60d
+          trends: 90d
+          status: DISABLED
+          units: '%'
+          tags:
+            - tag: Application
+              value: General
+        - uuid: 216fe7b370f7456eb949e2ac3942c935
+          name: 'Фактическое количество юнитов в стеке'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.89.53.8.0
+          key: eltex.mes2324p.snmp.sunitcount
+          tags:
+            - tag: Application
+              value: General
+          triggers:
+            - uuid: eac2691076a84f76928ca7be05d15ea3
+              expression: 'last(/Template Eltex MES2324FB SNMPv2/eltex.mes2324p.snmp.sunitcount)<>{$UNIT_COUNT}'
+              name: 'Фактическое количество юнитов стека ({HOST.IP1}) не соответствует проектному ({$UNIT_COUNT})'
+              priority: INFO
+              description: 'Считанное из коммутатора кол-во юнитов не соответствует проектному(фактически установленному) количеству. Вероятна неисправность стека.'
+              manual_close: 'YES'
+        - uuid: 2abbb41bfed844a39afca1342be66c03
+          name: 'Device name'
+          type: SNMP_AGENT
+          snmp_oid: 'SNMPv2-MIB::sysName.0'
+          key: eltex.mes2324p.snmp.sysName
+          delay: 1h
+          history: 1w
+          trends: '0'
+          value_type: CHAR
+          description: "An administratively-assigned name for this managed node. By convention, this is the node's fully-qualified domain name.  If the name is unknown, the value is the zero-length string."
+          inventory_link: NAME
+          tags:
+            - tag: Application
+              value: General
+        - uuid: 8f2bdc31ecbf4f42be09fda4e4327eeb
+          name: 'Device uptime'
+          type: SNMP_AGENT
+          snmp_oid: 'SNMPv2-MIB::sysUpTime.0'
+          key: eltex.mes2324p.snmp.sysUpTime
+          delay: 5m
+          history: 1w
+          trends: 60d
+          units: uptime
+          description: 'The time since the network management portion of the system was last re-initialized.'
+          preprocessing:
+            - type: MULTIPLIER
+              parameters:
+                - '0.01'
+          tags:
+            - tag: Application
+              value: General
+        - uuid: 9c51ce7d9a0b47f49cba86194f7aaceb
+          name: 'ICMP ping'
+          type: SIMPLE
+          key: icmpping
+          history: 1w
+          trends: 60d
+          valuemap:
+            name: 'Service state'
+          tags:
+            - tag: Application
+              value: ICMP
+          triggers:
+            - uuid: f044b9ab44db4579b5d9bbfc170c5bd5
+              expression: 'max(/Template Eltex MES2324FB SNMPv2/icmpping,#3)=0'
+              name: '{HOST.IP1} недоступен по результатам ICMP-пинга'
+              priority: HIGH
+        - uuid: a57895df1d894d3684c037d84f58fc1e
+          name: 'ICMP loss'
+          type: SIMPLE
+          key: icmppingloss
+          delay: 2m
+          history: 1w
+          trends: 60d
+          value_type: FLOAT
+          units: '%'
+          tags:
+            - tag: Application
+              value: ICMP
+          triggers:
+            - uuid: bb0a5c97d6ec45c7ac9e5cccfac017d0
+              expression: 'min(/Template Eltex MES2324FB SNMPv2/icmppingloss,5m)>20'
+              name: 'ICMP-ping to {HOST.IP1} loss is too high'
+              priority: WARNING
+              dependencies:
+                - name: '{HOST.IP1} недоступен по результатам ICMP-пинга'
+                  expression: 'max(/Template Eltex MES2324FB SNMPv2/icmpping,#3)=0'
+        - uuid: b8b5297ff9e647bbb93b06d9ea594afd
+          name: 'ICMP response time'
+          type: SIMPLE
+          key: icmppingsec
+          delay: 2m
+          history: 1w
+          trends: 60d
+          value_type: FLOAT
+          units: s
+          tags:
+            - tag: Application
+              value: ICMP
+          triggers:
+            - uuid: 82c80b216d454fc2a3eba5aa429c6082
+              expression: 'avg(/Template Eltex MES2324FB SNMPv2/icmppingsec,5m)>0.15'
+              name: 'ICMP-ping response time from {HOST.IP1} is too high'
+              priority: WARNING
+              dependencies:
+                - name: '{HOST.IP1} недоступен по результатам ICMP-пинга'
+                  expression: 'max(/Template Eltex MES2324FB SNMPv2/icmpping,#3)=0'
+      discovery_rules:
+        - uuid: 47648787aac947a2915fea7b74deb0e8
+          name: 'Network interfaces (gi-fa-te type shared)'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},IF-MIB::ifName,{#IFALIAS},IF-MIB::ifAlias]'
+          key: eltex.mes2324p.snmp.discovery.ifGiFaTeNameShared
+          delay: 1h
+          filter:
+            conditions:
+              - macro: '{#SNMPVALUE}'
+                value: '^(gi|fa|te)[0-9]\/0\/([1-9]{1}|[1-4]{1}[0-9]{1})$'
+                formulaid: A
+          description: |
+            You may also consider using IF-MIB::ifType or IF-MIB::ifAlias for discovery depending on your filtering needs.
+
+            {$SNMP_COMMUNITY} is a global macro.
+          item_prototypes:
+            - uuid: e11165212ead4c688e039ec645b2edf6
+              name: 'Admin status of interface {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: 'IF-MIB::ifAdminStatus.{#SNMPINDEX}'
+              key: 'ifAdminStatus[{#SNMPVALUE}]'
+              delay: 10m
+              history: 1w
+              trends: 60d
+              description: 'The desired state of the interface.'
+              valuemap:
+                name: 'SNMP interface status (ifAdminStatus)'
+              tags:
+                - tag: Application
+                  value: 'GI-FA-TE shared interfaces data'
+            - uuid: 845e192e48f841768ac80ad002b6590e
+              name: 'Alias of interface {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: 'IF-MIB::ifAlias.{#SNMPINDEX}'
+              key: 'ifAlias[{#SNMPVALUE}]'
+              delay: 1h
+              history: 1w
+              trends: '0'
+              value_type: CHAR
+              tags:
+                - tag: Application
+                  value: 'GI-FA-TE shared interfaces data'
+            - uuid: bc7bf11c68014e40902921046ec05baa
+              name: 'Description of interface {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: 'IF-MIB::ifDescr.{#SNMPINDEX}'
+              key: 'ifDescr[{#SNMPVALUE}]'
+              delay: 1h
+              history: 1w
+              trends: '0'
+              status: DISABLED
+              value_type: CHAR
+              description: 'A textual string containing information about the interface.  This string should include the name of the manufacturer, the product name and the version of the interface hardware/software.'
+              tags:
+                - tag: Application
+                  value: 'GI-FA-TE shared interfaces data'
+            - uuid: 340f0fd2a12c4fdba7455e551b7a1d70
+              name: 'Outbound errors on interface {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: 'IF-MIB::ifOutErrors.{#SNMPINDEX}'
+              key: 'ifGiFaOutErrors[{#SNMPVALUE}]'
+              delay: 10m
+              history: 1w
+              trends: 60d
+              description: 'For packet-oriented interfaces, the number of outbound packets that could not be transmitted because of errors. For character-oriented or fixed-length interfaces, the number of outbound transmission units that could not be transmitted because of errors.'
+              preprocessing:
+                - type: SIMPLE_CHANGE
+                  parameters:
+                    - ''
+              tags:
+                - tag: Application
+                  value: 'GI-FA-TE shared interfaces data'
+              trigger_prototypes:
+                - uuid: 76b783cdf2704fc48380b0dbbecbb708
+                  expression: 'last(/Template Eltex MES2324FB SNMPv2/ifGiFaOutErrors[{#SNMPVALUE}])>0'
+                  name: 'Error OUT interface {#SNMPVALUE} ({#IFALIAS})'
+                  priority: WARNING
+            - uuid: 9b2761f0d98445e5a366b2570003c204
+              name: 'Incoming Broadcast packets on interface {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: 'IF-MIB::ifHCInBroadcastPkts.{#SNMPINDEX}'
+              key: 'ifHCInBroadcastPkts[{#SNMPVALUE}]'
+              delay: 10m
+              history: 1w
+              trends: 60d
+              units: pps
+              description: 'The number of octets in valid MAC frames received on this interface, including the MAC header and FCS.'
+              preprocessing:
+                - type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+              tags:
+                - tag: Application
+                  value: 'GI-FA-TE shared interfaces data'
+            - uuid: c061c7b9733c43f2b7756c6bcd0527a9
+              name: 'Incoming Multicast packets on interface {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: 'IF-MIB::ifHCInMulticastPkts.{#SNMPINDEX}'
+              key: 'ifHCInMulticastPkts[{#SNMPVALUE}]'
+              delay: 10m
+              history: 1w
+              trends: 60d
+              units: pps
+              description: 'The number of octets in valid MAC frames received on this interface, including the MAC header and FCS.'
+              preprocessing:
+                - type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+              tags:
+                - tag: Application
+                  value: 'GI-FA-TE shared interfaces data'
+            - uuid: 11a9bc82db9e45d1a5825e11cbfc2e6e
+              name: 'Incoming traffic on interface {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: 'IF-MIB::ifHCInOctets.{#SNMPINDEX}'
+              key: 'ifHCInOctets[{#SNMPVALUE}]'
+              delay: 3m
+              history: 1w
+              trends: 60d
+              units: bit/s
+              description: 'The number of octets in valid MAC frames received on this interface, including the MAC header and FCS.'
+              preprocessing:
+                - type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+                - type: MULTIPLIER
+                  parameters:
+                    - '8'
+              tags:
+                - tag: Application
+                  value: 'GI-FA-TE shared interfaces data'
+            - uuid: 2b8f0fee6b224b5b96c2f7e19c1f29a9
+              name: 'Incoming Unicast packets on interface {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: 'IF-MIB::ifHCInUcastPkts.{#SNMPINDEX}'
+              key: 'ifHCInUcastPkts[{#SNMPVALUE}]'
+              delay: 10m
+              history: 1w
+              trends: 60d
+              units: pps
+              description: 'The number of octets in valid MAC frames received on this interface, including the MAC header and FCS.'
+              preprocessing:
+                - type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+              tags:
+                - tag: Application
+                  value: 'GI-FA-TE shared interfaces data'
+            - uuid: 5db96ac1dc3f4abbb5165e795f52b061
+              name: 'Outgoing Broadcast packets on interface {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: 'IF-MIB::ifHCOutBroadcastPkts.{#SNMPINDEX}'
+              key: 'ifHCOutBroadcastPkts[{#SNMPVALUE}]'
+              delay: 10m
+              history: 1w
+              trends: 60d
+              units: pps
+              description: 'The number of octets in valid MAC frames received on this interface, including the MAC header and FCS.'
+              preprocessing:
+                - type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+              tags:
+                - tag: Application
+                  value: 'GI-FA-TE shared interfaces data'
+            - uuid: 771e966490854332b1be08475c0f6903
+              name: 'Outgoing Multicast packets on interface {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: 'IF-MIB::ifHCOutMulticastPkts.{#SNMPINDEX}'
+              key: 'ifHCOutMulticastPkts[{#SNMPVALUE}]'
+              delay: 10m
+              history: 1w
+              trends: 60d
+              units: pps
+              description: 'The number of octets in valid MAC frames received on this interface, including the MAC header and FCS.'
+              preprocessing:
+                - type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+              tags:
+                - tag: Application
+                  value: 'GI-FA-TE shared interfaces data'
+            - uuid: 9b23e93c26cd451a920ac139701dfae9
+              name: 'Outgoing traffic on interface {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: 'IF-MIB::ifHCOutOctets.{#SNMPINDEX}'
+              key: 'ifHCOutOctets[{#SNMPVALUE}]'
+              delay: 3m
+              history: 1w
+              trends: 60d
+              units: bit/s
+              description: 'The number of octets transmitted in MAC frames on this interface, including the MAC header and FCS.'
+              preprocessing:
+                - type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+                - type: MULTIPLIER
+                  parameters:
+                    - '8'
+              tags:
+                - tag: Application
+                  value: 'GI-FA-TE shared interfaces data'
+            - uuid: f785d29406f541edbd473dbb81a9ae80
+              name: 'Outgoing Unicast packets on interface {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: 'IF-MIB::ifHCOutUcastPkts.{#SNMPINDEX}'
+              key: 'ifHCOutUcastPkts[{#SNMPVALUE}]'
+              delay: 10m
+              history: 1w
+              trends: 60d
+              units: pps
+              description: 'The number of octets in valid MAC frames received on this interface, including the MAC header and FCS.'
+              preprocessing:
+                - type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+              tags:
+                - tag: Application
+                  value: 'GI-FA-TE shared interfaces data'
+            - uuid: f212af86bb5d4bbd9e29a070ad505076
+              name: 'Inbound errors on interface {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: 'IF-MIB::ifInErrors.{#SNMPINDEX}'
+              key: 'ifInErrors[{#SNMPVALUE}]'
+              delay: 10m
+              history: 1w
+              trends: 60d
+              description: 'For packet-oriented interfaces, the number of inbound packets that contained errors preventing them from being deliverable to a higher-layer protocol.  For character-oriented or fixed-length interfaces, the number of inbound transmission units that contained errors preventing them from being deliverable to a higher-layer protocol.'
+              preprocessing:
+                - type: SIMPLE_CHANGE
+                  parameters:
+                    - ''
+              tags:
+                - tag: Application
+                  value: 'GI-FA-TE shared interfaces data'
+              trigger_prototypes:
+                - uuid: 90b54453289441eb854dfee320bee7b0
+                  expression: 'last(/Template Eltex MES2324FB SNMPv2/ifInErrors[{#SNMPVALUE}])>0'
+                  name: 'Error IN interface {#SNMPVALUE} ({#IFALIAS})'
+                  priority: WARNING
+            - uuid: 43aca5e7440140eabbc8824c68c5adf9
+              name: 'Operational status of interface {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: 'IF-MIB::ifOperStatus.{#SNMPINDEX}'
+              key: 'ifOperStatus[{#SNMPVALUE}]'
+              delay: 15m
+              history: 1w
+              trends: 60d
+              description: 'The current operational state of the interface.'
+              valuemap:
+                name: 'SNMP interface status (ifOperStatus)'
+              tags:
+                - tag: Application
+                  value: 'GI-FA-TE shared interfaces data'
+              trigger_prototypes:
+                - uuid: 65518031c62c4910964f1f99d2416a81
+                  expression: '(last(/Template Eltex MES2324FB SNMPv2/ifOperStatus[{#SNMPVALUE}],#1)<>last(/Template Eltex MES2324FB SNMPv2/ifOperStatus[{#SNMPVALUE}],#2))=1'
+                  name: 'Operational status was changed on {HOST.NAME} interface {#SNMPVALUE}'
+                  status: DISABLED
+                  priority: INFO
+            - uuid: 22f5d8a3c3f6407ba4aaf8dfe511c267
+              name: 'Link speed on interface {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.2.1.2.2.1.5.{#SNMPINDEX}'
+              key: 'link_speed_on_[{#SNMPVALUE}]'
+              delay: 1h
+              history: 1w
+              trends: 60d
+              units: bit/s
+              description: 'Mode speed on interfece.'
+              valuemap:
+                name: Speed
+              tags:
+                - tag: Application
+                  value: 'GI-FA-TE shared interfaces data'
+          trigger_prototypes:
+            - uuid: 0ccae58e7856469fac6fe7591d6d021c
+              expression: '((avg(/Template Eltex MES2324FB SNMPv2/ifHCInOctets[{#SNMPVALUE}],5m)>(last(/Template Eltex MES2324FB SNMPv2/link_speed_on_[{#SNMPVALUE}])*0.8)) or (avg(/Template Eltex MES2324FB SNMPv2/ifHCOutOctets[{#SNMPVALUE}],5m)>(last(/Template Eltex MES2324FB SNMPv2/link_speed_on_[{#SNMPVALUE}])*0.8))) and (last(/Template Eltex MES2324FB SNMPv2/link_speed_on_[{#SNMPVALUE}])<>0)'
+              name: 'Utilization > 80% on interface {#SNMPVALUE} ({#IFALIAS})'
+              priority: WARNING
+              description: 'Средний трафик(входящий или исходящий) интерфейса за 5 минут превысил 80% его текущей скорости линка'
+          graph_prototypes:
+            - uuid: e2821cc467d04c30928db099cbefeba9
+              name: 'B,M,U-cast on gi-fa int {#SNMPVALUE} ({#IFALIAS})'
+              ymin_type_1: FIXED
+              graph_items:
+                - drawtype: BOLD_LINE
+                  color: 0000C8
+                  yaxisside: RIGHT
+                  item:
+                    host: 'Template Eltex MES2324FB SNMPv2'
+                    key: 'ifHCInBroadcastPkts[{#SNMPVALUE}]'
+                - sortorder: '1'
+                  color: C800C8
+                  yaxisside: RIGHT
+                  item:
+                    host: 'Template Eltex MES2324FB SNMPv2'
+                    key: 'ifHCInMulticastPkts[{#SNMPVALUE}]'
+                - sortorder: '2'
+                  color: 00C8C8
+                  yaxisside: RIGHT
+                  item:
+                    host: 'Template Eltex MES2324FB SNMPv2'
+                    key: 'ifHCInUcastPkts[{#SNMPVALUE}]'
+                - sortorder: '3'
+                  drawtype: BOLD_LINE
+                  color: C8C800
+                  yaxisside: RIGHT
+                  item:
+                    host: 'Template Eltex MES2324FB SNMPv2'
+                    key: 'ifHCOutBroadcastPkts[{#SNMPVALUE}]'
+                - sortorder: '4'
+                  color: FC6EA3
+                  yaxisside: RIGHT
+                  item:
+                    host: 'Template Eltex MES2324FB SNMPv2'
+                    key: 'ifHCOutMulticastPkts[{#SNMPVALUE}]'
+                - sortorder: '5'
+                  color: '960000'
+                  yaxisside: RIGHT
+                  item:
+                    host: 'Template Eltex MES2324FB SNMPv2'
+                    key: 'ifHCOutUcastPkts[{#SNMPVALUE}]'
+            - uuid: b69d8b436c8f4eca99d5bd248cfc7101
+              name: 'Traffic on gi-fa int {#SNMPVALUE} ({#IFALIAS})'
+              ymin_type_1: FIXED
+              graph_items:
+                - drawtype: GRADIENT_LINE
+                  color: 1A7C11
+                  yaxisside: RIGHT
+                  item:
+                    host: 'Template Eltex MES2324FB SNMPv2'
+                    key: 'ifHCInOctets[{#SNMPVALUE}]'
+                - sortorder: '1'
+                  drawtype: GRADIENT_LINE
+                  color: 0000CC
+                  yaxisside: RIGHT
+                  item:
+                    host: 'Template Eltex MES2324FB SNMPv2'
+                    key: 'ifHCOutOctets[{#SNMPVALUE}]'
+                - sortorder: '2'
+                  color: F63100
+                  item:
+                    host: 'Template Eltex MES2324FB SNMPv2'
+                    key: 'ifInErrors[{#SNMPVALUE}]'
+                - sortorder: '3'
+                  color: EE00EE
+                  item:
+                    host: 'Template Eltex MES2324FB SNMPv2'
+                    key: 'ifGiFaOutErrors[{#SNMPVALUE}]'
+        - uuid: ad2d679de66b4896b5dbcfad53caf97a
+          name: 'Network interfaces (FB model type specific)'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},IF-MIB::ifName,{#IFALIAS},IF-MIB::ifAlias]'
+          key: eltex.mes2324p.snmp.discovery.ifTeSpecificName
+          delay: 1h
+          filter:
+            conditions:
+              - macro: '{#SNMPVALUE}'
+                value: '^(gi|fa|te)[0-9]\/0\/([1-9]{1}|[1-4]{1}[0-9]{1})$'
+                formulaid: A
+          description: |
+            You may also consider using IF-MIB::ifType or IF-MIB::ifAlias for discovery depending on your filtering needs.
+
+            {$SNMP_COMMUNITY} is a global macro.
+          item_prototypes:
+            - uuid: 5a7cbcd50fd148c88a3f2b6e7237342c
+              name: 'Уровень мощности на приеме SFP-интерфейса {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.89.90.1.2.1.3.{#SNMPINDEX}.9'
+              key: 'rlPhyTestGetResult.InPow[{#SNMPVALUE}]'
+              delay: 10m
+              value_type: FLOAT
+              units: dBm
+              description: 'Input power on SFP interface.'
+              preprocessing:
+                - type: MULTIPLIER
+                  parameters:
+                    - '0.001'
+              tags:
+                - tag: Application
+                  value: 'TE specific interfaces data'
+            - uuid: fe5c869270694933830d0a14d6ae3f89
+              name: 'Ток смещения SFP-интерфейса {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.89.90.1.2.1.3.{#SNMPINDEX}.7'
+              key: 'rlPhyTestGetResult.mA[{#SNMPVALUE}]'
+              delay: 10m
+              value_type: FLOAT
+              units: A
+              description: 'Ток смещения'
+              preprocessing:
+                - type: MULTIPLIER
+                  parameters:
+                    - '0.000001'
+              tags:
+                - tag: Application
+                  value: 'TE specific interfaces data'
+            - uuid: bd5c59c569c74cafad1bb3d13bbc9598
+              name: 'Уровень мощности на передаче SFP-интерфейса {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.89.90.1.2.1.3.{#SNMPINDEX}.8'
+              key: 'rlPhyTestGetResult.OutPow[{#SNMPVALUE}]'
+              delay: 10m
+              value_type: FLOAT
+              units: dBm
+              description: 'Out power on SFP interface.'
+              preprocessing:
+                - type: MULTIPLIER
+                  parameters:
+                    - '0.001'
+              tags:
+                - tag: Application
+                  value: 'TE specific interfaces data'
+            - uuid: 2fea035ecb2e40d2879285293bd68c24
+              name: 'Температура SFP-интерфейса {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.89.90.1.2.1.3.{#SNMPINDEX}.5'
+              key: 'rlPhyTestGetResult.t[{#SNMPVALUE}]'
+              delay: 10m
+              units: °C
+              description: 'Temperature on SFP interface.'
+              tags:
+                - tag: Application
+                  value: 'TE specific interfaces data'
+              trigger_prototypes:
+                - uuid: ed253de3a9dd4e569a86b244a49eec0a
+                  expression: 'last(/Template Eltex MES2324FB SNMPv2/rlPhyTestGetResult.t[{#SNMPVALUE}])>70'
+                  name: 'Температура SFP-модуля интерфейса {#SNMPVALUE} ({#IFALIAS}), превысила 70°C'
+                  priority: AVERAGE
+            - uuid: d5f2108c68ac427b831ada3b72970231
+              name: 'Напряжение питания SFP-интерфейса {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.89.90.1.2.1.3.{#SNMPINDEX}.6'
+              key: 'rlPhyTestGetResult.v[{#SNMPVALUE}]'
+              delay: 10m
+              value_type: FLOAT
+              units: V
+              description: 'Voltage on SFP interface.'
+              preprocessing:
+                - type: MULTIPLIER
+                  parameters:
+                    - '0.000001'
+              tags:
+                - tag: Application
+                  value: 'TE specific interfaces data'
+          graph_prototypes:
+            - uuid: 25e9f8cc8f564daebd43b1dc5849d0ef
+              name: 'Напряжение питания SFP-модуля интерфейса {#SNMPVALUE} ({#IFALIAS})'
+              ymin_type_1: FIXED
+              graph_items:
+                - drawtype: GRADIENT_LINE
+                  color: 1A7C11
+                  yaxisside: RIGHT
+                  item:
+                    host: 'Template Eltex MES2324FB SNMPv2'
+                    key: 'rlPhyTestGetResult.v[{#SNMPVALUE}]'
+            - uuid: 981aa8a9d2414a2a9bf8a4a4f19f8c1f
+              name: 'Температура SFP-модуля интерфеса {#SNMPVALUE} ({#IFALIAS})'
+              ymin_type_1: FIXED
+              graph_items:
+                - drawtype: GRADIENT_LINE
+                  color: 1A7C11
+                  yaxisside: RIGHT
+                  item:
+                    host: 'Template Eltex MES2324FB SNMPv2'
+                    key: 'rlPhyTestGetResult.t[{#SNMPVALUE}]'
+        - uuid: 116f1cdaf61b426eb3a90f6c5031f763
+          name: 'Unit number discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#MES2324UNITMAC}, 1.3.6.1.4.1.89.53.4.1.7]'
+          key: eltex.mes2324p.snmp.discovery.mac
+          delay: 1h
+          description: 'Возвращает номера юнитов (это просто SNMP-индекс: {#SNMPINDEX}) в стеке по которым запрашиваем MAC-адрес'
+          item_prototypes:
+            - uuid: 965743c8962f42ceb99b86131ea882ad
+              name: 'Описание модели юнита №{#SNMPINDEX} ({#MES2324UNITMAC})'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.89.53.4.1.6.{#SNMPINDEX}'
+              key: 'eltex.mes2324p.snmp.unit.desc[{#SNMPINDEX}]'
+              delay: 30m
+              trends: '0'
+              value_type: TEXT
+              description: 'Описание модели юнита (OID: 1.3.6.1.4.1.89.53.4.1.6)'
+              tags:
+                - tag: Application
+                  value: General
+            - uuid: 7b20a33d548b48c6888554a75286fa7d
+              name: 'Статус 1-го вентилятора юнита №{#SNMPINDEX} ({#MES2324UNITMAC})'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.89.53.15.1.4.{#SNMPINDEX}'
+              key: 'eltex.mes2324p.snmp.unit.fan1status[{#SNMPINDEX}]'
+              delay: 3m
+              description: 'Статус первого вентилятора (FAN1 OID: 1.3.6.1.4.1.89.53.15.1.4)'
+              valuemap:
+                name: EltexFANStatus
+              tags:
+                - tag: Application
+                  value: General
+              trigger_prototypes:
+                - uuid: b7173e2905084bff8782b39926ec68d0
+                  expression: 'last(/Template Eltex MES2324FB SNMPv2/eltex.mes2324p.snmp.unit.fan1status[{#SNMPINDEX}])<>1'
+                  name: 'Первый вентилятор юнита №{#SNMPINDEX} ({#MES2324UNITMAC}) не функционален'
+                  priority: AVERAGE
+            - uuid: 7151118631f24c209db11ae3d657aa4d
+              name: 'Статус 2-го вентилятора юнита №{#SNMPINDEX} ({#MES2324UNITMAC})'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.89.53.15.1.5.{#SNMPINDEX}'
+              key: 'eltex.mes2324p.snmp.unit.fan2status[{#SNMPINDEX}]'
+              delay: 3m
+              description: 'Статус второго вентилятора (FAN2 OID: 1.3.6.1.4.1.89.53.15.1.5)'
+              valuemap:
+                name: EltexFANStatus
+              tags:
+                - tag: Application
+                  value: General
+              trigger_prototypes:
+                - uuid: 40350af1e05a4ad9a368d4257014e914
+                  expression: 'last(/Template Eltex MES2324FB SNMPv2/eltex.mes2324p.snmp.unit.fan2status[{#SNMPINDEX}])<>1'
+                  name: 'Второй вентилятор юнита №{#SNMPINDEX} ({#MES2324UNITMAC}) не функционален'
+                  priority: AVERAGE
+            - uuid: 56d9b823aea844909036b5e70d8506b9
+              name: 'Версия FW юнита №{#SNMPINDEX} ({#MES2324UNITMAC})'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.89.53.4.1.5.{#SNMPINDEX}'
+              key: 'eltex.mes2324p.snmp.unit.fw[{#SNMPINDEX}]'
+              delay: 30m
+              trends: '0'
+              value_type: TEXT
+              description: 'Версия firmware юнита (OID: 1.3.6.1.4.1.89.53.4.1.5)'
+              tags:
+                - tag: Application
+                  value: General
+            - uuid: bc23fe849170479f85d05b3c09fa8e1a
+              name: 'MAC-адрес юнита №{#SNMPINDEX} ({#MES2324UNITMAC})'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.89.53.4.1.7.{#SNMPINDEX}'
+              key: 'eltex.mes2324p.snmp.unit.mac[{#SNMPINDEX}]'
+              delay: 30m
+              trends: '0'
+              value_type: TEXT
+              description: 'MAC-адрес юнита (OID: 1.3.6.1.4.1.89.53.4.1.7)'
+              tags:
+                - tag: Application
+                  value: General
+            - uuid: 1c2bdb36309348d6874054c470e7e8ba
+              name: 'Серийный номер юнита №{#SNMPINDEX} ({#MES2324UNITMAC})'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.89.53.14.1.5.{#SNMPINDEX}'
+              key: 'eltex.mes2324p.snmp.unit.sn[{#SNMPINDEX}]'
+              delay: 30m
+              trends: '0'
+              value_type: TEXT
+              description: 'Серийный номер юнита (OID: 1.3.6.1.4.1.89.53.14.1.5)'
+              tags:
+                - tag: Application
+                  value: General
+            - uuid: ae902dec557049808259102333616b0d
+              name: 'Температура юнита №{#SNMPINDEX} ({#MES2324UNITMAC})'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.89.53.15.1.10.{#SNMPINDEX}'
+              key: 'eltex.mes2324p.snmp.unit.temperature[{#SNMPINDEX}]'
+              delay: 3m
+              units: °C
+              description: 'Температура юнита (OID: 1.3.6.1.4.1.89.53.15.1.10)'
+              tags:
+                - tag: Application
+                  value: General
+              trigger_prototypes:
+                - uuid: 85192868029e4d3683792b74e40fb700
+                  expression: 'last(/Template Eltex MES2324FB SNMPv2/eltex.mes2324p.snmp.unit.temperature[{#SNMPINDEX}])>70'
+                  name: 'Температура юнита №{#SNMPINDEX} ({#MES2324UNITMAC})  > 70°C'
+                  priority: AVERAGE
+                  description: 'Последнее значение температуры указанного юнита превысила 70°C (OID: 1.3.6.1.4.1.89.53.15.1.10)'
+                - uuid: ee5aa37b6d8c4079aad3f23709572711
+                  expression: 'last(/Template Eltex MES2324FB SNMPv2/eltex.mes2324p.snmp.unit.temperature[{#SNMPINDEX}])>80'
+                  name: 'Температура юнита №{#SNMPINDEX} ({#MES2324UNITMAC})  > 80°C'
+                  priority: HIGH
+                  description: 'Последнее значение температуры указанного юнита превысила 80°C (OID: 1.3.6.1.4.1.89.53.15.1.10)'
+          graph_prototypes:
+            - uuid: 03d35a7707e14cc28c3025398c54a950
+              name: 'Температура юнита №{#SNMPINDEX} ({#MES2324UNITMAC})'
+              ymin_type_1: FIXED
+              graph_items:
+                - drawtype: GRADIENT_LINE
+                  color: 1A7C11
+                  yaxisside: RIGHT
+                  item:
+                    host: 'Template Eltex MES2324FB SNMPv2'
+                    key: 'eltex.mes2324p.snmp.unit.temperature[{#SNMPINDEX}]'
+          preprocessing:
+            - type: JAVASCRIPT
+              parameters:
+                - |
+                  value=value.split(" \"").join("\"");
+                  return value.split(' ').join(':');
+      macros:
+        - macro: '{$SNMP_COMMUNITY}'
+          value: public
+      valuemaps:
+        - uuid: 1c22d681a2944bec9bfeb8b63716a661
+          name: EltexFANStatus
+          mappings:
+            - value: '1'
+              newvalue: normal
+            - value: '5'
+              newvalue: notFunctioning
+        - uuid: 68483f5fd18e4c84a23c824d1580e1f9
+          name: 'Service state'
+          mappings:
+            - value: '0'
+              newvalue: Down
+            - value: '1'
+              newvalue: Up
+        - uuid: c09212444f344e77b60cca040b4acc41
+          name: 'SNMP interface status (ifAdminStatus)'
+          mappings:
+            - value: '1'
+              newvalue: up
+            - value: '2'
+              newvalue: down
+            - value: '3'
+              newvalue: testing
+        - uuid: c5481c1c4093443597ce2a3a323cadcb
+          name: 'SNMP interface status (ifOperStatus)'
+          mappings:
+            - value: '1'
+              newvalue: up
+            - value: '2'
+              newvalue: down
+            - value: '3'
+              newvalue: testing
+            - value: '4'
+              newvalue: unknown
+            - value: '5'
+              newvalue: dormant
+            - value: '6'
+              newvalue: notPresent
+            - value: '7'
+              newvalue: lowerLayerDown
+        - uuid: bc5ea557d9f7473596be2a5e8dca04cd
+          name: Speed
+          mappings:
+            - value: '10'
+              newvalue: '10  Mb/s'
+            - value: '100'
+              newvalue: '100 Mb/s'
+            - value: '1000'
+              newvalue: '1 Gb/s'
+            - value: '10000'
+              newvalue: '10 Gb/s'
+    - uuid: 520144614db84f919975c31ffad6b57d
+      template: 'Template Eltex MES2324P SNMPv2'
+      name: 'Template Eltex MES2324P SNMPv2'
+      groups:
+        - name: Templates
+      items:
+        - uuid: 1466578c34ea45c7a821e5bb64f170cf
+          name: 'CPU Utilization 5min'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.89.1.9.0
+          key: eltex.mes2324p.snmp.CpuUtilDuringLast5Minutes
+          delay: 5m
+          history: 60d
+          trends: 60d
+          units: '%'
+          tags:
+            - tag: Application
+              value: General
+          triggers:
+            - uuid: e821dd348bf54077914df52251d72c4c
+              expression: 'last(/Template Eltex MES2324P SNMPv2/eltex.mes2324p.snmp.CpuUtilDuringLast5Minutes)>70'
+              name: 'CPU Utilization on {HOST.IP1} for 5min > 70%'
+              priority: AVERAGE
+              manual_close: 'YES'
+            - uuid: 6ffc8b7dc0e8495abf991ebf67c08352
+              expression: 'last(/Template Eltex MES2324P SNMPv2/eltex.mes2324p.snmp.CpuUtilDuringLast5Minutes)>90'
+              name: 'CPU Utilization on {HOST.IP1} for 5min > 90%'
+              priority: HIGH
+              manual_close: 'YES'
+        - uuid: e978159f631f4e68987c511b72af8834
+          name: 'Number of network interfaces'
+          type: SNMP_AGENT
+          snmp_oid: 'IF-MIB::ifNumber.0'
+          key: eltex.mes2324p.snmp.ifNumber
+          delay: 1h
+          history: 1w
+          trends: 60d
+          description: 'The number of network interfaces (regardless of their current state) present on this system.'
+          tags:
+            - tag: Application
+              value: General
+        - uuid: 1c6c6228cc6646839c93ac7bde5fa3c0
+          name: 'Memory Utilization Free'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.35265.41.1.2.1.1.6.0
+          key: eltex.mes2324p.snmp.ProcessMemoryFreePercent
+          delay: 5m
+          history: 60d
+          trends: 60d
+          units: '%'
+          description: 'Данный OID показывает количество свободной ОЗУ в процентах. Данная возможность появилась начиная с версии 4.0.7. Ранее не было такой возможности.'
+          tags:
+            - tag: Application
+              value: General
+        - uuid: 3706ccdac6514cddb81a9d895b4c6d35
+          name: 'CPU Utilization 1min'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.89.1.8.0
+          key: eltex.mes2324p.snmp.rlCpuUtilDuringLastMinute
+          delay: 3m
+          history: 60d
+          trends: 90d
+          status: DISABLED
+          units: '%'
+          tags:
+            - tag: Application
+              value: General
+        - uuid: dd8f635e6a7f41d0b5a63e3e457c3c60
+          name: 'CPU Utilization 1sec'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.89.1.7.0
+          key: eltex.mes2324p.snmp.rlCpuUtilDuringLastSecond
+          delay: 3m
+          history: 60d
+          trends: 90d
+          status: DISABLED
+          units: '%'
+          tags:
+            - tag: Application
+              value: General
+        - uuid: 7e7738fc34b34f9885ed830337e9b7db
+          name: 'Фактическое количество юнитов в стеке'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.89.53.8.0
+          key: eltex.mes2324p.snmp.sunitcount
+          tags:
+            - tag: Application
+              value: General
+          triggers:
+            - uuid: a48aff530e1e4c658ac3e4a34cd9de0f
+              expression: 'last(/Template Eltex MES2324P SNMPv2/eltex.mes2324p.snmp.sunitcount)<>{$UNIT_COUNT}'
+              name: 'Фактическое количество юнитов стека ({HOST.IP1}) не соответствует проектному ({$UNIT_COUNT})'
+              priority: INFO
+              description: 'Считанное из коммутатора кол-во юнитов не соответствует проектному(фактически установленному) количеству. Вероятна неисправность стека.'
+              manual_close: 'YES'
+        - uuid: 89b5fad4adb446408a4c6ba15cdf2fdd
+          name: 'Device name'
+          type: SNMP_AGENT
+          snmp_oid: 'SNMPv2-MIB::sysName.0'
+          key: eltex.mes2324p.snmp.sysName
+          delay: 1h
+          history: 1w
+          trends: '0'
+          value_type: CHAR
+          description: "An administratively-assigned name for this managed node. By convention, this is the node's fully-qualified domain name.  If the name is unknown, the value is the zero-length string."
+          inventory_link: NAME
+          tags:
+            - tag: Application
+              value: General
+        - uuid: e9da45c520c946e787d3caf7368082e6
+          name: 'Device uptime'
+          type: SNMP_AGENT
+          snmp_oid: 'SNMPv2-MIB::sysUpTime.0'
+          key: eltex.mes2324p.snmp.sysUpTime
+          delay: 5m
+          history: 1w
+          trends: 60d
+          units: uptime
+          description: 'The time since the network management portion of the system was last re-initialized.'
+          preprocessing:
+            - type: MULTIPLIER
+              parameters:
+                - '0.01'
+          tags:
+            - tag: Application
+              value: General
+        - uuid: c6aa4ffacd694ce7a65c7ded3dc5b13d
+          name: 'ICMP ping'
+          type: SIMPLE
+          key: icmpping
+          history: 1w
+          trends: 60d
+          valuemap:
+            name: 'Service state'
+          tags:
+            - tag: Application
+              value: ICMP
+          triggers:
+            - uuid: fc80c88c616a4d8b8c742542711780c9
+              expression: 'max(/Template Eltex MES2324P SNMPv2/icmpping,#3)=0'
+              name: '{HOST.IP1} недоступен по результатам ICMP-пинга'
+              priority: HIGH
+        - uuid: 551bbc52cba740509b95480bb8d1d077
+          name: 'ICMP loss'
+          type: SIMPLE
+          key: icmppingloss
+          delay: 2m
+          history: 1w
+          trends: 60d
+          value_type: FLOAT
+          units: '%'
+          tags:
+            - tag: Application
+              value: ICMP
+          triggers:
+            - uuid: a84edbbe906e48628e8f2bbecc02804c
+              expression: 'min(/Template Eltex MES2324P SNMPv2/icmppingloss,5m)>20'
+              name: 'ICMP-ping to {HOST.IP1} loss is too high'
+              priority: WARNING
+              dependencies:
+                - name: '{HOST.IP1} недоступен по результатам ICMP-пинга'
+                  expression: 'max(/Template Eltex MES2324P SNMPv2/icmpping,#3)=0'
+        - uuid: e145f64b5ad545b59994f7e2e0ae92ad
+          name: 'ICMP response time'
+          type: SIMPLE
+          key: icmppingsec
+          delay: 2m
+          history: 1w
+          trends: 60d
+          value_type: FLOAT
+          units: s
+          tags:
+            - tag: Application
+              value: ICMP
+          triggers:
+            - uuid: 5c886fd9708b4842a2ed67fc0916d5c1
+              expression: 'avg(/Template Eltex MES2324P SNMPv2/icmppingsec,5m)>0.15'
+              name: 'ICMP-ping response from {HOST.IP1} time is too high'
+              priority: WARNING
+              dependencies:
+                - name: '{HOST.IP1} недоступен по результатам ICMP-пинга'
+                  expression: 'max(/Template Eltex MES2324P SNMPv2/icmpping,#3)=0'
+      discovery_rules:
+        - uuid: 9bf07f30a3fd42b49f45da2fa950a7e2
+          name: 'Network interfaces (gi-fa-te type shared)'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},IF-MIB::ifName,{#IFALIAS},IF-MIB::ifAlias]'
+          key: eltex.mes2324p.snmp.discovery.ifGiFaTeNameShared
+          delay: 1h
+          filter:
+            conditions:
+              - macro: '{#SNMPVALUE}'
+                value: '^(gi|fa|te)[0-9]\/0\/([1-9]{1}|[1-4]{1}[0-9]{1})$'
+                formulaid: A
+          description: |
+            You may also consider using IF-MIB::ifType or IF-MIB::ifAlias for discovery depending on your filtering needs.
+
+            {$SNMP_COMMUNITY} is a global macro.
+          item_prototypes:
+            - uuid: aece64ca5fe743968d7d8fca3682b168
+              name: 'Admin status of interface {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: 'IF-MIB::ifAdminStatus.{#SNMPINDEX}'
+              key: 'ifAdminStatus[{#SNMPVALUE}]'
+              delay: 10m
+              history: 1w
+              trends: 60d
+              description: 'The desired state of the interface.'
+              valuemap:
+                name: 'SNMP interface status (ifAdminStatus)'
+              tags:
+                - tag: Application
+                  value: 'GI-FA-TE shared interfaces data'
+            - uuid: fd2eaa1831444487ac545759eb27cf5f
+              name: 'Alias of interface {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: 'IF-MIB::ifAlias.{#SNMPINDEX}'
+              key: 'ifAlias[{#SNMPVALUE}]'
+              delay: 1h
+              history: 1w
+              trends: '0'
+              value_type: CHAR
+              tags:
+                - tag: Application
+                  value: 'GI-FA-TE shared interfaces data'
+            - uuid: 84b3a1b475b844cd9fffad1be60264f3
+              name: 'Description of interface {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: 'IF-MIB::ifDescr.{#SNMPINDEX}'
+              key: 'ifDescr[{#SNMPVALUE}]'
+              delay: 1h
+              history: 1w
+              trends: '0'
+              status: DISABLED
+              value_type: CHAR
+              description: 'A textual string containing information about the interface.  This string should include the name of the manufacturer, the product name and the version of the interface hardware/software.'
+              tags:
+                - tag: Application
+                  value: 'GI-FA-TE shared interfaces data'
+            - uuid: 55c2e17ce00b4acd9ca2e009131efbef
+              name: 'Outbound errors on interface {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: 'IF-MIB::ifOutErrors.{#SNMPINDEX}'
+              key: 'ifGiFaOutErrors[{#SNMPVALUE}]'
+              delay: 10m
+              history: 1w
+              trends: 60d
+              description: 'For packet-oriented interfaces, the number of outbound packets that could not be transmitted because of errors. For character-oriented or fixed-length interfaces, the number of outbound transmission units that could not be transmitted because of errors.'
+              preprocessing:
+                - type: SIMPLE_CHANGE
+                  parameters:
+                    - ''
+              tags:
+                - tag: Application
+                  value: 'GI-FA-TE shared interfaces data'
+              trigger_prototypes:
+                - uuid: e0cf44b309d248afac9146ec97bcba94
+                  expression: 'last(/Template Eltex MES2324P SNMPv2/ifGiFaOutErrors[{#SNMPVALUE}])>0'
+                  name: 'Error OUT interface {#SNMPVALUE} ({#IFALIAS})'
+                  priority: WARNING
+                  manual_close: 'YES'
+            - uuid: 67354a4a50454b4ca845924d779ed04c
+              name: 'Incoming Broadcast packets on interface {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: 'IF-MIB::ifHCInBroadcastPkts.{#SNMPINDEX}'
+              key: 'ifHCInBroadcastPkts[{#SNMPVALUE}]'
+              delay: 10m
+              history: 1w
+              trends: 60d
+              units: pps
+              description: 'The number of octets in valid MAC frames received on this interface, including the MAC header and FCS.'
+              preprocessing:
+                - type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+              tags:
+                - tag: Application
+                  value: 'GI-FA-TE shared interfaces data'
+            - uuid: 221ca568e1264f47a6e9743e9b758e70
+              name: 'Incoming Multicast packets on interface {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: 'IF-MIB::ifHCInMulticastPkts.{#SNMPINDEX}'
+              key: 'ifHCInMulticastPkts[{#SNMPVALUE}]'
+              delay: 10m
+              history: 1w
+              trends: 60d
+              units: pps
+              description: 'The number of octets in valid MAC frames received on this interface, including the MAC header and FCS.'
+              preprocessing:
+                - type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+              tags:
+                - tag: Application
+                  value: 'GI-FA-TE shared interfaces data'
+            - uuid: 002869a8c4ee44ff974701c161c6ffbf
+              name: 'Incoming traffic on interface {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: 'IF-MIB::ifHCInOctets.{#SNMPINDEX}'
+              key: 'ifHCInOctets[{#SNMPVALUE}]'
+              delay: 3m
+              history: 1w
+              trends: 60d
+              units: bit/s
+              description: 'The number of octets in valid MAC frames received on this interface, including the MAC header and FCS.'
+              preprocessing:
+                - type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+                - type: MULTIPLIER
+                  parameters:
+                    - '8'
+              tags:
+                - tag: Application
+                  value: 'GI-FA-TE shared interfaces data'
+            - uuid: 22f3511a1dfe4e2cad450351e29c1229
+              name: 'Incoming Unicast packets on interface {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: 'IF-MIB::ifHCInUcastPkts.{#SNMPINDEX}'
+              key: 'ifHCInUcastPkts[{#SNMPVALUE}]'
+              delay: 10m
+              history: 1w
+              trends: 60d
+              units: pps
+              description: 'The number of octets in valid MAC frames received on this interface, including the MAC header and FCS.'
+              preprocessing:
+                - type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+              tags:
+                - tag: Application
+                  value: 'GI-FA-TE shared interfaces data'
+            - uuid: 793915f6a0b449fdad6124a2dde9b16a
+              name: 'Outgoing Broadcast packets on interface {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: 'IF-MIB::ifHCOutBroadcastPkts.{#SNMPINDEX}'
+              key: 'ifHCOutBroadcastPkts[{#SNMPVALUE}]'
+              delay: 10m
+              history: 1w
+              trends: 60d
+              units: pps
+              description: 'The number of octets in valid MAC frames received on this interface, including the MAC header and FCS.'
+              preprocessing:
+                - type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+              tags:
+                - tag: Application
+                  value: 'GI-FA-TE shared interfaces data'
+            - uuid: 5fde0b3b75fb4a1ab6bc3fe276dcaee6
+              name: 'Outgoing Multicast packets on interface {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: 'IF-MIB::ifHCOutMulticastPkts.{#SNMPINDEX}'
+              key: 'ifHCOutMulticastPkts[{#SNMPVALUE}]'
+              delay: 10m
+              history: 1w
+              trends: 60d
+              units: pps
+              description: 'The number of octets in valid MAC frames received on this interface, including the MAC header and FCS.'
+              preprocessing:
+                - type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+              tags:
+                - tag: Application
+                  value: 'GI-FA-TE shared interfaces data'
+            - uuid: 2d6d70218203465a85a53c73152eb8fc
+              name: 'Outgoing traffic on interface {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: 'IF-MIB::ifHCOutOctets.{#SNMPINDEX}'
+              key: 'ifHCOutOctets[{#SNMPVALUE}]'
+              delay: 3m
+              history: 1w
+              trends: 60d
+              units: bit/s
+              description: 'The number of octets transmitted in MAC frames on this interface, including the MAC header and FCS.'
+              preprocessing:
+                - type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+                - type: MULTIPLIER
+                  parameters:
+                    - '8'
+              tags:
+                - tag: Application
+                  value: 'GI-FA-TE shared interfaces data'
+            - uuid: 9e310acd09f24c35a85703656aed8245
+              name: 'Outgoing Unicast packets on interface {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: 'IF-MIB::ifHCOutUcastPkts.{#SNMPINDEX}'
+              key: 'ifHCOutUcastPkts[{#SNMPVALUE}]'
+              delay: 10m
+              history: 1w
+              trends: 60d
+              units: pps
+              description: 'The number of octets in valid MAC frames received on this interface, including the MAC header and FCS.'
+              preprocessing:
+                - type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+              tags:
+                - tag: Application
+                  value: 'GI-FA-TE shared interfaces data'
+            - uuid: 2bb728d0f7cf4d91aca65a379b92e7eb
+              name: 'Inbound errors on interface {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: 'IF-MIB::ifInErrors.{#SNMPINDEX}'
+              key: 'ifInErrors[{#SNMPVALUE}]'
+              delay: 10m
+              history: 1w
+              trends: 60d
+              description: 'For packet-oriented interfaces, the number of inbound packets that contained errors preventing them from being deliverable to a higher-layer protocol.  For character-oriented or fixed-length interfaces, the number of inbound transmission units that contained errors preventing them from being deliverable to a higher-layer protocol.'
+              preprocessing:
+                - type: SIMPLE_CHANGE
+                  parameters:
+                    - ''
+              tags:
+                - tag: Application
+                  value: 'GI-FA-TE shared interfaces data'
+              trigger_prototypes:
+                - uuid: 34637723fb814c6fb3568684a1285909
+                  expression: 'last(/Template Eltex MES2324P SNMPv2/ifInErrors[{#SNMPVALUE}])>0'
+                  name: 'Error IN interface {#SNMPVALUE} ({#IFALIAS})'
+                  priority: WARNING
+                  manual_close: 'YES'
+            - uuid: dc60df62386749bdbf2d671f70357d81
+              name: 'Operational status of interface {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: 'IF-MIB::ifOperStatus.{#SNMPINDEX}'
+              key: 'ifOperStatus[{#SNMPVALUE}]'
+              delay: 15m
+              history: 1w
+              trends: 60d
+              description: 'The current operational state of the interface.'
+              valuemap:
+                name: 'SNMP interface status (ifOperStatus)'
+              tags:
+                - tag: Application
+                  value: 'GI-FA-TE shared interfaces data'
+              trigger_prototypes:
+                - uuid: 8f581773cdf94047b5b85b139438a2f8
+                  expression: '(last(/Template Eltex MES2324P SNMPv2/ifOperStatus[{#SNMPVALUE}],#1)<>last(/Template Eltex MES2324P SNMPv2/ifOperStatus[{#SNMPVALUE}],#2))=1'
+                  name: 'Operational status was changed on {HOST.NAME} interface {#SNMPVALUE}'
+                  status: DISABLED
+                  priority: INFO
+            - uuid: 40062b4735d744b69f8b3561b4d7aefc
+              name: 'Link speed on interface {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.2.1.2.2.1.5.{#SNMPINDEX}'
+              key: 'link_speed_on_[{#SNMPVALUE}]'
+              delay: 1h
+              history: 1w
+              trends: 60d
+              units: bit/s
+              description: 'Mode speed on interfece.'
+              valuemap:
+                name: Speed
+              tags:
+                - tag: Application
+                  value: 'GI-FA-TE shared interfaces data'
+          trigger_prototypes:
+            - uuid: 6e90d89f85314bc19413abb167235579
+              expression: '((avg(/Template Eltex MES2324P SNMPv2/ifHCInOctets[{#SNMPVALUE}],5m)>(last(/Template Eltex MES2324P SNMPv2/link_speed_on_[{#SNMPVALUE}])*0.8)) or (avg(/Template Eltex MES2324P SNMPv2/ifHCOutOctets[{#SNMPVALUE}],5m)>(last(/Template Eltex MES2324P SNMPv2/link_speed_on_[{#SNMPVALUE}])*0.8))) and (last(/Template Eltex MES2324P SNMPv2/link_speed_on_[{#SNMPVALUE}])<>0)'
+              name: 'Utilization > 80% on interface {#SNMPVALUE} ({#IFALIAS})'
+              priority: WARNING
+              description: 'Средний трафик(входящий или исходящий) интерфейса за 5 минут превысил 80% его текущей скорости линка'
+              manual_close: 'YES'
+          graph_prototypes:
+            - uuid: 31103fd7fa0f439a8ed62117123ac69f
+              name: 'B,M,U-cast on gi-fa int {#SNMPVALUE} ({#IFALIAS})'
+              ymin_type_1: FIXED
+              graph_items:
+                - drawtype: BOLD_LINE
+                  color: 0000C8
+                  yaxisside: RIGHT
+                  item:
+                    host: 'Template Eltex MES2324P SNMPv2'
+                    key: 'ifHCInBroadcastPkts[{#SNMPVALUE}]'
+                - sortorder: '1'
+                  color: C800C8
+                  yaxisside: RIGHT
+                  item:
+                    host: 'Template Eltex MES2324P SNMPv2'
+                    key: 'ifHCInMulticastPkts[{#SNMPVALUE}]'
+                - sortorder: '2'
+                  color: 00C8C8
+                  yaxisside: RIGHT
+                  item:
+                    host: 'Template Eltex MES2324P SNMPv2'
+                    key: 'ifHCInUcastPkts[{#SNMPVALUE}]'
+                - sortorder: '3'
+                  drawtype: BOLD_LINE
+                  color: C8C800
+                  yaxisside: RIGHT
+                  item:
+                    host: 'Template Eltex MES2324P SNMPv2'
+                    key: 'ifHCOutBroadcastPkts[{#SNMPVALUE}]'
+                - sortorder: '4'
+                  color: FC6EA3
+                  yaxisside: RIGHT
+                  item:
+                    host: 'Template Eltex MES2324P SNMPv2'
+                    key: 'ifHCOutMulticastPkts[{#SNMPVALUE}]'
+                - sortorder: '5'
+                  color: '960000'
+                  yaxisside: RIGHT
+                  item:
+                    host: 'Template Eltex MES2324P SNMPv2'
+                    key: 'ifHCOutUcastPkts[{#SNMPVALUE}]'
+            - uuid: 0c6c91c201544dd4b505323cc04b3b7f
+              name: 'Traffic on gi-fa int {#SNMPVALUE} ({#IFALIAS})'
+              ymin_type_1: FIXED
+              graph_items:
+                - drawtype: GRADIENT_LINE
+                  color: 1A7C11
+                  yaxisside: RIGHT
+                  item:
+                    host: 'Template Eltex MES2324P SNMPv2'
+                    key: 'ifHCInOctets[{#SNMPVALUE}]'
+                - sortorder: '1'
+                  drawtype: GRADIENT_LINE
+                  color: 0000CC
+                  yaxisside: RIGHT
+                  item:
+                    host: 'Template Eltex MES2324P SNMPv2'
+                    key: 'ifHCOutOctets[{#SNMPVALUE}]'
+                - sortorder: '2'
+                  color: F63100
+                  item:
+                    host: 'Template Eltex MES2324P SNMPv2'
+                    key: 'ifInErrors[{#SNMPVALUE}]'
+                - sortorder: '3'
+                  color: EE00EE
+                  item:
+                    host: 'Template Eltex MES2324P SNMPv2'
+                    key: 'ifGiFaOutErrors[{#SNMPVALUE}]'
+        - uuid: 479f3e66620147139a483122fee6fdbc
+          name: 'Network interfaces (te type specific)'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#SNMPVALUE},IF-MIB::ifName,{#IFALIAS},IF-MIB::ifAlias]'
+          key: eltex.mes2324p.snmp.discovery.ifTeSpecificName
+          delay: 1h
+          filter:
+            conditions:
+              - macro: '{#SNMPVALUE}'
+                value: '^(te)[0-9]\/0\/([1-9]{1}|[1-4]{1}[0-9]{1})$'
+                formulaid: A
+          description: |
+            You may also consider using IF-MIB::ifType or IF-MIB::ifAlias for discovery depending on your filtering needs.
+
+            {$SNMP_COMMUNITY} is a global macro.
+          item_prototypes:
+            - uuid: 24a7bf716d2a4137a1aaf50a9b79c57f
+              name: 'Уровень мощности на приеме SFP-интерфейса {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.89.90.1.2.1.3.{#SNMPINDEX}.9'
+              key: 'rlPhyTestGetResult.InPow[{#SNMPVALUE}]'
+              delay: 10m
+              value_type: FLOAT
+              units: dBm
+              description: 'Input power on SFP interface.'
+              preprocessing:
+                - type: MULTIPLIER
+                  parameters:
+                    - '0.001'
+              tags:
+                - tag: Application
+                  value: 'TE specific interfaces data'
+            - uuid: ab5e35073dd34870a354bf87cc72c07b
+              name: 'Ток смещения SFP-интерфейса {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.89.90.1.2.1.3.{#SNMPINDEX}.7'
+              key: 'rlPhyTestGetResult.mA[{#SNMPVALUE}]'
+              delay: 10m
+              value_type: FLOAT
+              units: A
+              description: 'Ток смещения'
+              preprocessing:
+                - type: MULTIPLIER
+                  parameters:
+                    - '0.000001'
+              tags:
+                - tag: Application
+                  value: 'TE specific interfaces data'
+            - uuid: 11447cb2db514c239ed9e3bac82f8350
+              name: 'Уровень мощности на передаче SFP-интерфейса {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.89.90.1.2.1.3.{#SNMPINDEX}.8'
+              key: 'rlPhyTestGetResult.OutPow[{#SNMPVALUE}]'
+              delay: 10m
+              value_type: FLOAT
+              units: dBm
+              description: 'Out power on SFP interface.'
+              preprocessing:
+                - type: MULTIPLIER
+                  parameters:
+                    - '0.001'
+              tags:
+                - tag: Application
+                  value: 'TE specific interfaces data'
+            - uuid: b5616b0ead474ad1be36f42a466e33d3
+              name: 'Температура SFP-интерфейса {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.89.90.1.2.1.3.{#SNMPINDEX}.5'
+              key: 'rlPhyTestGetResult.t[{#SNMPVALUE}]'
+              delay: 10m
+              units: °C
+              description: 'Temperature on SFP interface.'
+              tags:
+                - tag: Application
+                  value: 'TE specific interfaces data'
+              trigger_prototypes:
+                - uuid: 510a438e2af44b2193c6ffda5f776d77
+                  expression: 'last(/Template Eltex MES2324P SNMPv2/rlPhyTestGetResult.t[{#SNMPVALUE}])>70'
+                  name: 'Температура SFP-модуля интерфейса {#SNMPVALUE} ({#IFALIAS}), превысила 70°C'
+                  priority: AVERAGE
+            - uuid: 0452dd19203a47b2afeafe4b2e847f4f
+              name: 'Напряжение питания SFP-интерфейса {#SNMPVALUE}'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.89.90.1.2.1.3.{#SNMPINDEX}.6'
+              key: 'rlPhyTestGetResult.v[{#SNMPVALUE}]'
+              delay: 10m
+              value_type: FLOAT
+              units: V
+              description: 'Voltage on SFP interface.'
+              preprocessing:
+                - type: MULTIPLIER
+                  parameters:
+                    - '0.000001'
+              tags:
+                - tag: Application
+                  value: 'TE specific interfaces data'
+          graph_prototypes:
+            - uuid: 6a03c9e914544e2797e011274aa85483
+              name: 'Напряжение питания SFP-модуля интерфейса {#SNMPVALUE} ({#IFALIAS})'
+              ymin_type_1: FIXED
+              graph_items:
+                - drawtype: GRADIENT_LINE
+                  color: 1A7C11
+                  yaxisside: RIGHT
+                  item:
+                    host: 'Template Eltex MES2324P SNMPv2'
+                    key: 'rlPhyTestGetResult.v[{#SNMPVALUE}]'
+            - uuid: 6f33c26de9e34080a92bc35396109bef
+              name: 'Температура SFP-модуля интерфеса {#SNMPVALUE} ({#IFALIAS})'
+              ymin_type_1: FIXED
+              graph_items:
+                - drawtype: GRADIENT_LINE
+                  color: 1A7C11
+                  yaxisside: RIGHT
+                  item:
+                    host: 'Template Eltex MES2324P SNMPv2'
+                    key: 'rlPhyTestGetResult.t[{#SNMPVALUE}]'
+        - uuid: 6c54b1bd660c4ceeb4149cbbbe2546de
+          name: 'Unit number discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#MES2324UNITMAC}, 1.3.6.1.4.1.89.53.4.1.7]'
+          key: eltex.mes2324p.snmp.discovery.mac
+          delay: 1h
+          description: 'Возвращает номера юнитов (это просто SNMP-индекс: {#SNMPINDEX}) в стеке по которым запрашиваем MAC-адрес'
+          item_prototypes:
+            - uuid: ebd63edde3304cf5b217ef53627c0940
+              name: 'Описание модели юнита №{#SNMPINDEX} ({#MES2324UNITMAC})'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.89.53.4.1.6.{#SNMPINDEX}'
+              key: 'eltex.mes2324p.snmp.unit.desc[{#SNMPINDEX}]'
+              delay: 30m
+              trends: '0'
+              value_type: TEXT
+              description: 'Описание модели юнита (OID: 1.3.6.1.4.1.89.53.4.1.6)'
+              tags:
+                - tag: Application
+                  value: General
+            - uuid: c35f66c3b3b04c6985efaf4e5c96da02
+              name: 'Статус 1-го вентилятора юнита №{#SNMPINDEX} ({#MES2324UNITMAC})'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.89.53.15.1.4.{#SNMPINDEX}'
+              key: 'eltex.mes2324p.snmp.unit.fan1status[{#SNMPINDEX}]'
+              delay: 3m
+              description: 'Статус первого вентилятора (FAN1 OID: 1.3.6.1.4.1.89.53.15.1.4)'
+              valuemap:
+                name: EltexFANStatus
+              tags:
+                - tag: Application
+                  value: General
+              trigger_prototypes:
+                - uuid: 86ef013d9824449c8247c9a47a70286f
+                  expression: 'last(/Template Eltex MES2324P SNMPv2/eltex.mes2324p.snmp.unit.fan1status[{#SNMPINDEX}])<>1'
+                  name: 'Первый вентилятор юнита №{#SNMPINDEX} ({#MES2324UNITMAC}) не функционален'
+                  priority: AVERAGE
+                  manual_close: 'YES'
+            - uuid: 2160f44fc1604d8f85464798cd502097
+              name: 'Статус 2-го вентилятора юнита №{#SNMPINDEX} ({#MES2324UNITMAC})'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.89.53.15.1.5.{#SNMPINDEX}'
+              key: 'eltex.mes2324p.snmp.unit.fan2status[{#SNMPINDEX}]'
+              delay: 3m
+              description: 'Статус второго вентилятора (FAN2 OID: 1.3.6.1.4.1.89.53.15.1.5)'
+              valuemap:
+                name: EltexFANStatus
+              tags:
+                - tag: Application
+                  value: General
+              trigger_prototypes:
+                - uuid: 791ba422a7074dac98c0ea5675a353a3
+                  expression: 'last(/Template Eltex MES2324P SNMPv2/eltex.mes2324p.snmp.unit.fan2status[{#SNMPINDEX}])<>1'
+                  name: 'Второй вентилятор юнита №{#SNMPINDEX} ({#MES2324UNITMAC}) не функционален'
+                  priority: AVERAGE
+                  manual_close: 'YES'
+            - uuid: 46b39636dc354a05bafd266451452e61
+              name: 'Версия FW юнита №{#SNMPINDEX} ({#MES2324UNITMAC})'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.89.53.4.1.5.{#SNMPINDEX}'
+              key: 'eltex.mes2324p.snmp.unit.fw[{#SNMPINDEX}]'
+              delay: 30m
+              trends: '0'
+              value_type: TEXT
+              description: 'Версия firmware юнита (OID: 1.3.6.1.4.1.89.53.4.1.5)'
+              tags:
+                - tag: Application
+                  value: General
+            - uuid: d3dd0b192e484004b8c6a0528a814332
+              name: 'MAC-адрес юнита №{#SNMPINDEX} ({#MES2324UNITMAC})'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.89.53.4.1.7.{#SNMPINDEX}'
+              key: 'eltex.mes2324p.snmp.unit.mac[{#SNMPINDEX}]'
+              delay: 30m
+              trends: '0'
+              value_type: TEXT
+              description: 'MAC-адрес юнита (OID: 1.3.6.1.4.1.89.53.4.1.7)'
+              tags:
+                - tag: Application
+                  value: General
+            - uuid: ecc3745a88ee4a6590fae3cfbdf2b55c
+              name: 'Серийный номер юнита №{#SNMPINDEX} ({#MES2324UNITMAC})'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.89.53.14.1.5.{#SNMPINDEX}'
+              key: 'eltex.mes2324p.snmp.unit.sn[{#SNMPINDEX}]'
+              delay: 30m
+              trends: '0'
+              value_type: TEXT
+              description: 'Серийный номер юнита (OID: 1.3.6.1.4.1.89.53.14.1.5)'
+              tags:
+                - tag: Application
+                  value: General
+            - uuid: 1603965bcdc54551914ee5d558d9210b
+              name: 'Температура юнита №{#SNMPINDEX} ({#MES2324UNITMAC})'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.89.53.15.1.10.{#SNMPINDEX}'
+              key: 'eltex.mes2324p.snmp.unit.temperature[{#SNMPINDEX}]'
+              delay: 3m
+              units: °C
+              description: 'Температура юнита (OID: 1.3.6.1.4.1.89.53.15.1.10)'
+              tags:
+                - tag: Application
+                  value: General
+              trigger_prototypes:
+                - uuid: 0355ce065b3042459ee38e5336416326
+                  expression: 'last(/Template Eltex MES2324P SNMPv2/eltex.mes2324p.snmp.unit.temperature[{#SNMPINDEX}])>70'
+                  name: 'Температура юнита №{#SNMPINDEX} ({#MES2324UNITMAC})  > 70°C'
+                  priority: AVERAGE
+                  description: 'Последнее значение температуры указанного юнита превысила 70°C (OID: 1.3.6.1.4.1.89.53.15.1.10)'
+                  manual_close: 'YES'
+                - uuid: 621106b0d50346b3a7060857ab8d11fd
+                  expression: 'last(/Template Eltex MES2324P SNMPv2/eltex.mes2324p.snmp.unit.temperature[{#SNMPINDEX}])>80'
+                  name: 'Температура юнита №{#SNMPINDEX} ({#MES2324UNITMAC})  > 80°C'
+                  priority: HIGH
+                  description: 'Последнее значение температуры указанного юнита превысила 80°C (OID: 1.3.6.1.4.1.89.53.15.1.10)'
+                  manual_close: 'YES'
+          graph_prototypes:
+            - uuid: 6dd98f9aaadb4fd7b10a0e220b3f9931
+              name: 'Температура юнита №{#SNMPINDEX} ({#MES2324UNITMAC})'
+              ymin_type_1: FIXED
+              graph_items:
+                - drawtype: GRADIENT_LINE
+                  color: 1A7C11
+                  yaxisside: RIGHT
+                  item:
+                    host: 'Template Eltex MES2324P SNMPv2'
+                    key: 'eltex.mes2324p.snmp.unit.temperature[{#SNMPINDEX}]'
+          preprocessing:
+            - type: JAVASCRIPT
+              parameters:
+                - |
+                  value=value.split(" \"").join("\"");
+                  return value.split(' ').join(':');
+      macros:
+        - macro: '{$SNMP_COMMUNITY}'
+          value: public
+      valuemaps:
+        - uuid: 251e9e2ec79643b7b8b98325d1075540
+          name: EltexFANStatus
+          mappings:
+            - value: '1'
+              newvalue: normal
+            - value: '5'
+              newvalue: notFunctioning
+        - uuid: c4b02b8b24b64d3daa3cb40cfa2355dc
+          name: 'Service state'
+          mappings:
+            - value: '0'
+              newvalue: Down
+            - value: '1'
+              newvalue: Up
+        - uuid: c0a0e25eddc140c5af49256e23c8aa5b
+          name: 'SNMP interface status (ifAdminStatus)'
+          mappings:
+            - value: '1'
+              newvalue: up
+            - value: '2'
+              newvalue: down
+            - value: '3'
+              newvalue: testing
+        - uuid: 3e272f7a2f0540f1924a59d8a1e7ab5f
+          name: 'SNMP interface status (ifOperStatus)'
+          mappings:
+            - value: '1'
+              newvalue: up
+            - value: '2'
+              newvalue: down
+            - value: '3'
+              newvalue: testing
+            - value: '4'
+              newvalue: unknown
+            - value: '5'
+              newvalue: dormant
+            - value: '6'
+              newvalue: notPresent
+            - value: '7'
+              newvalue: lowerLayerDown
+        - uuid: e2bdc000309743e8b9fd53380e5b8ca5
+          name: Speed
+          mappings:
+            - value: '10'
+              newvalue: '10  Mb/s'
+            - value: '100'
+              newvalue: '100 Mb/s'
+            - value: '1000'
+              newvalue: '1 Gb/s'
+            - value: '10000'
+              newvalue: '10 Gb/s'
+    - uuid: 5390e4ad2b3e43b289599bdcc911a8c0
+      template: 'Template Eltex MES2324P SNMPv2 -NON PORTS-'
+      name: 'Template Eltex MES2324P SNMPv2 -NON PORTS-'
+      description: 'Шаблон создан в основном для мониторинга общего состояния стеков в филиалах (магазинах), мониторит только основные параметры. Состояние портов не мониторит для экономии трафика.'
+      groups:
+        - name: Templates
+      items:
+        - uuid: 46b7e083b6304503ab3ca87c757f4b22
+          name: 'CPU Utilization 5min'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.89.1.9.0
+          key: eltex.mes2324p.snmp.CpuUtilDuringLast5Minutes
+          delay: 5m
+          history: 60d
+          trends: 60d
+          units: '%'
+          tags:
+            - tag: Application
+              value: General
+          triggers:
+            - uuid: bbdee30450124d1ea84fd1b145c5394f
+              expression: 'last(/Template Eltex MES2324P SNMPv2 -NON PORTS-/eltex.mes2324p.snmp.CpuUtilDuringLast5Minutes)>70'
+              name: 'CPU Utilization on {HOST.IP1} for 5min > 70%'
+              priority: AVERAGE
+            - uuid: b124d03c429a4922828fd3f8c94de0c1
+              expression: 'last(/Template Eltex MES2324P SNMPv2 -NON PORTS-/eltex.mes2324p.snmp.CpuUtilDuringLast5Minutes)>90'
+              name: 'CPU Utilization on {HOST.IP1} for 5min > 90%'
+              priority: HIGH
+              type: MULTIPLE
+        - uuid: a056c69f85364bd7862736309a0864f0
+          name: 'Number of network interfaces'
+          type: SNMP_AGENT
+          snmp_oid: 'IF-MIB::ifNumber.0'
+          key: eltex.mes2324p.snmp.ifNumber
+          delay: 1h
+          history: 1w
+          trends: 60d
+          description: 'The number of network interfaces (regardless of their current state) present on this system.'
+          tags:
+            - tag: Application
+              value: General
+        - uuid: 571399a27fc0444aa022a83f9ee11573
+          name: 'Memory Utilization Free'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.35265.41.1.2.1.1.6.0
+          key: eltex.mes2324p.snmp.ProcessMemoryFreePercent
+          delay: 5m
+          history: 60d
+          trends: 60d
+          units: '%'
+          description: 'Данный OID показывает количество свободной ОЗУ в процентах. Данная возможность появилась начиная с версии 4.0.7. Ранее не было такой возможности.'
+          tags:
+            - tag: Application
+              value: General
+        - uuid: dc226515ac074331a04ffe0d062800b5
+          name: 'CPU Utilization 1min'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.89.1.8.0
+          key: eltex.mes2324p.snmp.rlCpuUtilDuringLastMinute
+          delay: 3m
+          history: 60d
+          trends: 90d
+          status: DISABLED
+          units: '%'
+          tags:
+            - tag: Application
+              value: General
+        - uuid: 5b6547faa7ae4d14be635a19e27e53b9
+          name: 'CPU Utilization 1sec'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.89.1.7.0
+          key: eltex.mes2324p.snmp.rlCpuUtilDuringLastSecond
+          delay: 3m
+          history: 60d
+          trends: 90d
+          status: DISABLED
+          units: '%'
+          tags:
+            - tag: Application
+              value: General
+        - uuid: b7981465bf88482eac4d8f06f00fc446
+          name: 'Фактическое количество юнитов в стеке'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.89.53.8.0
+          key: eltex.mes2324p.snmp.sunitcount
+          tags:
+            - tag: Application
+              value: General
+          triggers:
+            - uuid: bfab30ad5a67448ebef93c1c78032290
+              expression: 'last(/Template Eltex MES2324P SNMPv2 -NON PORTS-/eltex.mes2324p.snmp.sunitcount)<>{$UNIT_COUNT}'
+              name: 'Фактическое количество юнитов стека ({HOST.IP1}) не соответствует проектному ({$UNIT_COUNT})'
+              priority: INFO
+              description: 'Считанное из коммутатора кол-во юнитов не соответствует проектному(фактически установленному) количеству. Вероятна неисправность стека.'
+              manual_close: 'YES'
+        - uuid: c1c77b5d072e4a19882ba3479eaf1d03
+          name: 'Device name'
+          type: SNMP_AGENT
+          snmp_oid: 'SNMPv2-MIB::sysName.0'
+          key: eltex.mes2324p.snmp.sysName
+          delay: 1h
+          history: 1w
+          trends: '0'
+          value_type: CHAR
+          description: "An administratively-assigned name for this managed node. By convention, this is the node's fully-qualified domain name.  If the name is unknown, the value is the zero-length string."
+          inventory_link: NAME
+          tags:
+            - tag: Application
+              value: General
+        - uuid: 4cf466c61a8f47a2a3e0267a1eec7faa
+          name: 'Device uptime'
+          type: SNMP_AGENT
+          snmp_oid: 'SNMPv2-MIB::sysUpTime.0'
+          key: eltex.mes2324p.snmp.sysUpTime
+          delay: 5m
+          history: 1w
+          trends: 60d
+          units: uptime
+          description: 'The time since the network management portion of the system was last re-initialized.'
+          preprocessing:
+            - type: MULTIPLIER
+              parameters:
+                - '0.01'
+          tags:
+            - tag: Application
+              value: General
+        - uuid: 3d5353862b70415783406b93742a8faf
+          name: 'ICMP ping'
+          type: SIMPLE
+          key: icmpping
+          history: 1w
+          trends: 60d
+          valuemap:
+            name: 'Service state'
+          tags:
+            - tag: Application
+              value: ICMP
+          triggers:
+            - uuid: 302ea0860b974149a769cd2b89d68d42
+              expression: 'max(/Template Eltex MES2324P SNMPv2 -NON PORTS-/icmpping,#3)=0'
+              name: '{HOST.IP1} недоступен по результатам ICMP-пинга'
+              priority: HIGH
+        - uuid: e8ff749abc134a938f4bf00327a5a315
+          name: 'ICMP loss'
+          type: SIMPLE
+          key: icmppingloss
+          delay: 2m
+          history: 1w
+          trends: 60d
+          value_type: FLOAT
+          units: '%'
+          tags:
+            - tag: Application
+              value: ICMP
+          triggers:
+            - uuid: 8cca2d252a894cdc984d7fe4cc99bbed
+              expression: 'min(/Template Eltex MES2324P SNMPv2 -NON PORTS-/icmppingloss,5m)>20'
+              name: 'ICMP-ping to {HOST.IP1} loss is too high'
+              priority: WARNING
+              dependencies:
+                - name: '{HOST.IP1} недоступен по результатам ICMP-пинга'
+                  expression: 'max(/Template Eltex MES2324P SNMPv2 -NON PORTS-/icmpping,#3)=0'
+        - uuid: f1d2682e0b694883aa6c1a70c996e5d1
+          name: 'ICMP response time'
+          type: SIMPLE
+          key: icmppingsec
+          delay: 2m
+          history: 1w
+          trends: 60d
+          value_type: FLOAT
+          units: s
+          tags:
+            - tag: Application
+              value: ICMP
+          triggers:
+            - uuid: 3a83db2b496b48eaa317fc10b940c9b6
+              expression: 'avg(/Template Eltex MES2324P SNMPv2 -NON PORTS-/icmppingsec,5m)>0.15'
+              name: 'ICMP-ping response from {HOST.IP1} time is too high'
+              priority: WARNING
+              dependencies:
+                - name: '{HOST.IP1} недоступен по результатам ICMP-пинга'
+                  expression: 'max(/Template Eltex MES2324P SNMPv2 -NON PORTS-/icmpping,#3)=0'
+      discovery_rules:
+        - uuid: 35ea1cbd94ec4a25884d44ee14829468
+          name: 'Unit number discovery'
+          type: SNMP_AGENT
+          snmp_oid: 'discovery[{#MES2324UNITMAC}, 1.3.6.1.4.1.89.53.4.1.7]'
+          key: eltex.mes2324p.snmp.discovery.mac
+          delay: 1h
+          description: 'Возвращает номера юнитов (это просто SNMP-индекс: {#SNMPINDEX}) в стеке по которым запрашиваем MAC-адрес'
+          item_prototypes:
+            - uuid: 97ff864c23ec49418e38d92ac09ca676
+              name: 'Описание модели юнита №{#SNMPINDEX} ({#MES2324UNITMAC})'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.89.53.4.1.6.{#SNMPINDEX}'
+              key: 'eltex.mes2324p.snmp.unit.desc[{#SNMPINDEX}]'
+              delay: 30m
+              trends: '0'
+              value_type: TEXT
+              description: 'Описание модели юнита (OID: 1.3.6.1.4.1.89.53.4.1.6)'
+              tags:
+                - tag: Application
+                  value: General
+            - uuid: 16e86b56495849d1b7bd6ab19c261cb1
+              name: 'Статус 1-го вентилятора юнита №{#SNMPINDEX} ({#MES2324UNITMAC})'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.89.53.15.1.4.{#SNMPINDEX}'
+              key: 'eltex.mes2324p.snmp.unit.fan1status[{#SNMPINDEX}]'
+              delay: 3m
+              description: 'Статус первого вентилятора (FAN1 OID: 1.3.6.1.4.1.89.53.15.1.4)'
+              valuemap:
+                name: EltexFANStatus
+              tags:
+                - tag: Application
+                  value: General
+              trigger_prototypes:
+                - uuid: 4b53c9c977e040e6ae3c5e56e3096d1f
+                  expression: 'last(/Template Eltex MES2324P SNMPv2 -NON PORTS-/eltex.mes2324p.snmp.unit.fan1status[{#SNMPINDEX}])<>1'
+                  name: 'Первый вентилятор юнита №{#SNMPINDEX} ({#MES2324UNITMAC}) не функционален'
+                  priority: AVERAGE
+            - uuid: 19ef812502504df4b21ee9c3d183b666
+              name: 'Статус 2-го вентилятора юнита №{#SNMPINDEX} ({#MES2324UNITMAC})'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.89.53.15.1.5.{#SNMPINDEX}'
+              key: 'eltex.mes2324p.snmp.unit.fan2status[{#SNMPINDEX}]'
+              delay: 3m
+              description: 'Статус второго вентилятора (FAN2 OID: 1.3.6.1.4.1.89.53.15.1.5)'
+              valuemap:
+                name: EltexFANStatus
+              tags:
+                - tag: Application
+                  value: General
+              trigger_prototypes:
+                - uuid: 85f443e0b1d9409e9578920daf14c160
+                  expression: 'last(/Template Eltex MES2324P SNMPv2 -NON PORTS-/eltex.mes2324p.snmp.unit.fan2status[{#SNMPINDEX}])<>1'
+                  name: 'Второй вентилятор юнита №{#SNMPINDEX} ({#MES2324UNITMAC}) не функционален'
+                  priority: AVERAGE
+            - uuid: 8b384b5ba66545399b7beb8535416167
+              name: 'Версия FW юнита №{#SNMPINDEX} ({#MES2324UNITMAC})'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.89.53.4.1.5.{#SNMPINDEX}'
+              key: 'eltex.mes2324p.snmp.unit.fw[{#SNMPINDEX}]'
+              delay: 30m
+              trends: '0'
+              value_type: TEXT
+              description: 'Версия firmware юнита (OID: 1.3.6.1.4.1.89.53.4.1.5)'
+              tags:
+                - tag: Application
+                  value: General
+            - uuid: f6fd67eb47b64577bb6534ab01a6df40
+              name: 'MAC-адрес юнита №{#SNMPINDEX} ({#MES2324UNITMAC})'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.89.53.4.1.7.{#SNMPINDEX}'
+              key: 'eltex.mes2324p.snmp.unit.mac[{#SNMPINDEX}]'
+              delay: 30m
+              trends: '0'
+              value_type: TEXT
+              description: 'MAC-адрес юнита (OID: 1.3.6.1.4.1.89.53.4.1.7)'
+              tags:
+                - tag: Application
+                  value: General
+            - uuid: d0707fceffd64b43b0e49c5c1c6dba68
+              name: 'Серийный номер юнита №{#SNMPINDEX} ({#MES2324UNITMAC})'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.89.53.14.1.5.{#SNMPINDEX}'
+              key: 'eltex.mes2324p.snmp.unit.sn[{#SNMPINDEX}]'
+              delay: 30m
+              trends: '0'
+              value_type: TEXT
+              description: 'Серийный номер юнита (OID: 1.3.6.1.4.1.89.53.14.1.5)'
+              tags:
+                - tag: Application
+                  value: General
+            - uuid: e894c391d70f4dd9a13474850adfc73a
+              name: 'Температура юнита №{#SNMPINDEX} ({#MES2324UNITMAC})'
+              type: SNMP_AGENT
+              snmp_oid: '1.3.6.1.4.1.89.53.15.1.10.{#SNMPINDEX}'
+              key: 'eltex.mes2324p.snmp.unit.temperature[{#SNMPINDEX}]'
+              delay: 3m
+              units: °C
+              description: 'Температура юнита (OID: 1.3.6.1.4.1.89.53.15.1.10)'
+              tags:
+                - tag: Application
+                  value: General
+              trigger_prototypes:
+                - uuid: 054015835cdc48b0845cfdb540a09609
+                  expression: 'last(/Template Eltex MES2324P SNMPv2 -NON PORTS-/eltex.mes2324p.snmp.unit.temperature[{#SNMPINDEX}])>60'
+                  name: 'Температура юнита №{#SNMPINDEX} ({#MES2324UNITMAC})  > 60°C'
+                  priority: AVERAGE
+                  description: 'Последнее значение температуры указанного юнита превысила 60°C (OID: 1.3.6.1.4.1.89.53.15.1.10)'
+                - uuid: 56c67055dbc74c9ab5b6398c1f4f308f
+                  expression: 'last(/Template Eltex MES2324P SNMPv2 -NON PORTS-/eltex.mes2324p.snmp.unit.temperature[{#SNMPINDEX}])>80'
+                  name: 'Температура юнита №{#SNMPINDEX} ({#MES2324UNITMAC})  > 80°C'
+                  priority: HIGH
+                  description: 'Последнее значение температуры указанного юнита превысила 80°C (OID: 1.3.6.1.4.1.89.53.15.1.10)'
+          graph_prototypes:
+            - uuid: 66e77f5c521245819b9d79111b537bb3
+              name: 'Температура юнита №{#SNMPINDEX} ({#MES2324UNITMAC})'
+              ymin_type_1: FIXED
+              graph_items:
+                - drawtype: GRADIENT_LINE
+                  color: 1A7C11
+                  yaxisside: RIGHT
+                  item:
+                    host: 'Template Eltex MES2324P SNMPv2 -NON PORTS-'
+                    key: 'eltex.mes2324p.snmp.unit.temperature[{#SNMPINDEX}]'
+          preprocessing:
+            - type: JAVASCRIPT
+              parameters:
+                - |
+                  value=value.split(" \"").join("\"");
+                  return value.split(' ').join(':');
+      macros:
+        - macro: '{$SNMP_COMMUNITY}'
+          value: public
+      valuemaps:
+        - uuid: e452005ba58542b4989e259c2e5de03d
+          name: EltexFANStatus
+          mappings:
+            - value: '1'
+              newvalue: normal
+            - value: '5'
+              newvalue: notFunctioning
+        - uuid: 1eb4eb952a0d4883b3b27450c8edf37e
+          name: 'Service state'
+          mappings:
+            - value: '0'
+              newvalue: Down
+            - value: '1'
+              newvalue: Up
+        - uuid: 5ee9ece7f9c549d5bcc27ddd0a5ca856
+          name: 'SNMP interface status (ifAdminStatus)'
+          mappings:
+            - value: '1'
+              newvalue: up
+            - value: '2'
+              newvalue: down
+            - value: '3'
+              newvalue: testing
+        - uuid: dfd60af83d344e7b9caae31f59c2e56f
+          name: 'SNMP interface status (ifOperStatus)'
+          mappings:
+            - value: '1'
+              newvalue: up
+            - value: '2'
+              newvalue: down
+            - value: '3'
+              newvalue: testing
+            - value: '4'
+              newvalue: unknown
+            - value: '5'
+              newvalue: dormant
+            - value: '6'
+              newvalue: notPresent
+            - value: '7'
+              newvalue: lowerLayerDown
+        - uuid: 337b40a7ae9f4f9caf373fff6913b41e
+          name: Speed
+          mappings:
+            - value: '10'
+              newvalue: '10  Mb/s'
+            - value: '100'
+              newvalue: '100 Mb/s'
+            - value: '1000'
+              newvalue: '1 Gb/s'
+            - value: '10000'
+              newvalue: '10 Gb/s'
+  graphs:
+    - uuid: 7ae2e29cc72444f7b3aa794204a0701f
+      name: 'CPU Utilization'
+      ymin_type_1: FIXED
+      graph_items:
+        - drawtype: GRADIENT_LINE
+          color: 358B2D
+          yaxisside: RIGHT
+          item:
+            host: 'Template Eltex MES2324P SNMPv2'
+            key: eltex.mes2324p.snmp.CpuUtilDuringLast5Minutes
+    - uuid: 8ca1eb13517a4563be321473eee62624
+      name: 'CPU Utilization'
+      ymin_type_1: FIXED
+      graph_items:
+        - drawtype: GRADIENT_LINE
+          color: 358B2D
+          yaxisside: RIGHT
+          item:
+            host: 'Template Eltex MES2124P SNMPv2'
+            key: eltex.mes2124p.snmp.CpuUtilDuringLast5Minutes
+    - uuid: 18b9b77699b34c0eaa22d882bd797d3d
+      name: 'CPU Utilization'
+      ymin_type_1: FIXED
+      graph_items:
+        - drawtype: GRADIENT_LINE
+          color: 358B2D
+          yaxisside: RIGHT
+          item:
+            host: 'Template Eltex MES2324FB SNMPv2'
+            key: eltex.mes2324p.snmp.CpuUtilDuringLast5Minutes
+    - uuid: 17e6e51c1e064775b2c9522554720e42
+      name: 'CPU Utilization'
+      ymin_type_1: FIXED
+      graph_items:
+        - drawtype: GRADIENT_LINE
+          color: 358B2D
+          yaxisside: RIGHT
+          item:
+            host: 'Template Eltex MES2124P SNMPv2 -NON PORTS-'
+            key: eltex.mes2124p.snmp.CpuUtilDuringLast5Minutes
+    - uuid: 3e06aa53578c44cb8e218d6ea7d6fd8d
+      name: 'CPU Utilization'
+      ymin_type_1: FIXED
+      graph_items:
+        - drawtype: GRADIENT_LINE
+          color: 358B2D
+          yaxisside: RIGHT
+          item:
+            host: 'Template Eltex MES2324P SNMPv2 -NON PORTS-'
+            key: eltex.mes2324p.snmp.CpuUtilDuringLast5Minutes
+    - uuid: 5ebbe9c834a84c3aa3c5b67ffd7aa4d2
+      name: 'Memory utilization'
+      ymin_type_1: FIXED
+      graph_items:
+        - drawtype: GRADIENT_LINE
+          color: 358B2D
+          yaxisside: RIGHT
+          item:
+            host: 'Template Eltex MES2324P SNMPv2'
+            key: eltex.mes2324p.snmp.ProcessMemoryFreePercent
+    - uuid: 9b6e3708cd274805bfb4c80fa4bcb25f
+      name: 'Memory utilization'
+      ymin_type_1: FIXED
+      graph_items:
+        - drawtype: GRADIENT_LINE
+          color: 358B2D
+          yaxisside: RIGHT
+          item:
+            host: 'Template Eltex MES2324FB SNMPv2'
+            key: eltex.mes2324p.snmp.ProcessMemoryFreePercent
+    - uuid: d61398d584f54c0ba1a24db012563023
+      name: 'Memory utilization'
+      ymin_type_1: FIXED
+      graph_items:
+        - drawtype: GRADIENT_LINE
+          color: 358B2D
+          yaxisside: RIGHT
+          item:
+            host: 'Template Eltex MES2324P SNMPv2 -NON PORTS-'
+            key: eltex.mes2324p.snmp.ProcessMemoryFreePercent
